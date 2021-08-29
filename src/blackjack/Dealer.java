@@ -39,10 +39,10 @@ public final class Dealer implements User { //SOLID preferes to use an interface
     public boolean play(Dealer dealer, Player player, Deck myDeck) {
         // DEALER TURN - CAN HIT IF HANDVALUE < 17   
         boolean isBust =false;
-        if (dealer.getDealerHand().getHandValue() >= 17) {
-
-            return true;
-        }
+//        if (dealer.getDealerHand().getHandValue() >= 17) {
+//
+//            
+//        }
        // if (dealer.getDealerHand().getHandValue() < 17  {
             // dealer only hits if allowed and is beneficial (i.e player has a higher handvalue than them)
             while ((dealer.getDealerHand().getHandValue() <= 17) &&
@@ -62,7 +62,7 @@ public final class Dealer implements User { //SOLID preferes to use an interface
                     
                 }
     
-            System.out.println(this);
+            
             return isBust;
         }
     

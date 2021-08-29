@@ -63,7 +63,7 @@ public class Match {
                 return;
 
             } else {
-                    player.hit(myDeck.deal());
+                    
                     System.out.println("========================================");
                     System.out.println(player);
                     System.out.println("Dealer's hand: [" + dealer.getDealerHand().getHand().get(0) + ", HIDDEN]  (value: UNKNOWN)");
@@ -74,7 +74,7 @@ public class Match {
                 
                 if (player.play(dealer, player, myDeck)) // if player busts
                 {
-                    System.out.println("Player Bust!");
+                    
                     System.out.println("\n===============Dealer wins!============");
                     player.setPlayerLoss(player.getPlayerLoss() + 1);
                     return;
@@ -86,27 +86,56 @@ public class Match {
                 // Dealers turn
                 if (dealer.play(dealer, player, myDeck)) // if dealer busts
                 {
-                    System.out.println("Dealer Bust!");
+                  
                     System.out.println("\n==============="+ player.getPlayerName() + " wins!==========");
                     player.setPlayerBalance(player.getPlayerBalance() + (initialBet * 1.5));
                     player.setPlayerWins(player.getPlayerWins() + 1);
                     return;
                     
                 }
+                
+                        // HOW TO DIRECT ALL POSSIBLE GAME ENDINGS TO EXECUTE THIS PART or should i add/subtract at every possible ending
+        if (dealer.getDealerHand().getHandValue() == player.getPlayerHand().getHandValue()) // tie
+        {
+            System.out.println("\n======Tie!======");
+            player.setPlayerBalance(player.getPlayerBalance() + (initialBet)); // return bet to player
+
+            return;
+        } else if (dealer.getDealerHand().getHandValue() > player.getPlayerHand().getHandValue() && dealer.getDealerHand().getHandValue() <= 21) // dealer wins
+        {
+            System.out.println("\n======Dealer wins!======");
+            player.setPlayerLoss(player.getPlayerLoss() + 1);
+
+            return;
+        } else if (dealer.getDealerHand().getHandValue() < player.getPlayerHand().getHandValue() && player.getPlayerHand().getHandValue() <= 21)// player wins
+        {
+            System.out.println("\n======" + player.getPlayerName() + " wins!======");
+            player.setPlayerBalance(player.getPlayerBalance() + (initialBet * 1.5));
+            player.setPlayerWins(player.getPlayerWins() + 1);
+
+            return;
+        }
+    }
+                
+                
+                
+                
+                
             }
 
         }
-        
-    }
-    
-    public static void printState(Player player, Dealer dealer)
+        public static void printState(Player player, Dealer dealer)
     {
             System.out.println("=================================================================");
             System.out.println(player);
             System.out.println(dealer);
             System.out.println("=================================================================");
     }
-}
+        
+    }
+    
+
+
 
         // CHECK WINNING CONDITIONS
         // HOW TO DIRECT ALL POSSIBLE GAME ENDINGS TO EXECUTE THIS PART or should i add/subtract at every possible ending

@@ -69,34 +69,6 @@ public class Player implements User {
         return this.getPlayerHand().getHandValue();
     }
 
-    // Methods
-    public void stand() {
-        System.out.println("==============");
-        System.out.println(getPlayerName() + " stands!");
-        return;
-
-    }
-
-    /**
-     * If allowed, adds card to player hand. Also corrects for ACE being 11 or 1
-     *
-     * @param card
-     */
-    @Override
-    public void hit(Card card) {
-
-        if (this.calcHandValue() < 21) {
-            if (this.calcHandValue() >= 11 && card.getValue().equals(Value.ACE)) {
-
-                playerHand.setHandValue(playerHand.getHandValue() - 10); // Corrects for ACE being 11 or 1
-                playerHand.add(card);
-            } else {
-                playerHand.add(card);
-            }
-
-        }
-    }
-
     /**
      * returns and prompts user for bet amount, deducts amount from balance and
      * handles invalid input
@@ -128,6 +100,26 @@ public class Player implements User {
     }
 
     /**
+     * If allowed, adds card to player hand. Also corrects for ACE being 11 or 1
+     *
+     * @param card
+     */
+    @Override
+    public void hit(Card card) {
+
+        if (this.calcHandValue() < 21) {
+            if (this.calcHandValue() >= 11 && card.getValue().equals(Value.ACE)) {
+
+                playerHand.setHandValue(playerHand.getHandValue() - 10); // Corrects for ACE being 11 or 1
+                playerHand.add(card);
+            } else {
+                playerHand.add(card);
+            }
+
+        }
+    }
+
+    /**
      * game logic for player's turn
      *
      * @param dealer
@@ -137,7 +129,7 @@ public class Player implements User {
      * @throws InputMismatchException
      */
     @Override
-    public boolean play(Dealer dealer, Player player, Deck myDeck) throws InputMismatchException { 
+    public boolean play(Dealer dealer, Player player, Deck myDeck) throws InputMismatchException {
         Scanner scan = new Scanner(System.in);
 
         int choice = 0;
@@ -145,47 +137,43 @@ public class Player implements User {
 
         // prompts user for action and catches invalid input
         while (!(choice == 1 || choice == 2)) {
-            try{
-                
-            System.out.println("Hit(1) or Stand(2)?: ");
-            choice = scan.nextInt();
-            
-            }catch(InputMismatchException e)
-            {
+            try {
+
+                System.out.println("Hit(1) or Stand(2)?: ");
+                choice = scan.nextInt();
+
+            } catch (InputMismatchException e) {
                 System.out.println("Input must be numerical");
             }
             scan.nextLine();
         }
 
+        while (choice != 2) {
 
-        while (choice !=2){
-
-            if (this.calcHandValue() < 21) {
+            if (player.calcHandValue() < 21) {
 
                 if (choice == 1) { // i.e if player hits
 
                     player.hit(myDeck.deal()); //deal a card
-                    
-                    
+
                     System.out.println("========================================");
                     System.out.println(player);
                     System.out.println("Dealer's hand: [" + dealer.getDealerHand().getHand().get(0) + ", HIDDEN]  (value: UNKNOWN)");
                     System.out.println("=======================================");
 
-                    if (this.calcHandValue() > 21) { // if player has bust
+                    if (player.calcHandValue() > 21) { // if player has bust
                         player.setPlayerLoss(player.getPlayerLoss() + 1); // increase player loss
-                        System.out.println(this.getPlayerName() + " Bust!");
+                        System.out.println(player.getPlayerName() + " Bust!");
                         isBust = true;
                         return isBust;
                     } else {
-                      
+
                         choice = 0;
                         while (!(choice == 1 || choice == 2)) {
-                            try{
-                            System.out.println("Type 1 to Hit or 2 to Stand: ");
-                            choice = scan.nextInt();
-                            }catch(InputMismatchException e)
-                            {
+                            try {
+                                System.out.println("Type 1 to Hit or 2 to Stand: ");
+                                choice = scan.nextInt();
+                            } catch (InputMismatchException e) {
                                 System.out.println("Input must be numerical");
                             }
                             scan.nextLine();
@@ -195,12 +183,11 @@ public class Player implements User {
                 }
             }
 
-        } 
+        }
 
-        player.stand();
+        System.out.println(player.getPlayerName() + " stands!");
         return isBust;
     }
-
 
     @Override
     public String toString() {

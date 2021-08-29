@@ -6,6 +6,7 @@ package blackjack;
  */
 /**
  * keeps card value as word and associated numerical value
+ *
  * @author Ivan
  */
 public enum Value {
@@ -32,8 +33,9 @@ public enum Value {
 
     /**
      * returns numerical value of card
-     * @return 
-     */ 
+     *
+     * @return
+     */
     public int getCardValue() {
         return this.cardValue;
     }

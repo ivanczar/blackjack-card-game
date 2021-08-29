@@ -17,6 +17,7 @@ public class Hand {
         setHand(new ArrayList());
         setHandValue(0);
     }
+
     // getters and setters
     public ArrayList<Card> getHand() {
         return hand;
@@ -34,13 +35,13 @@ public class Hand {
         this.handValue = handValue;
     }
 
-    
     /**
-     * adds a card to the players hand array and updates hand value member variable
-     * @param card 
+     * adds a card to the players hand array and updates hand value member
+     * variable
+     *
+     * @param card
      */
-    public void add(Card card) 
-    {
+    public void add(Card card) {
 
         getHand().add(card);
         setHandValue(getHandValue() + card.getValue().getCardValue());
@@ -48,7 +49,7 @@ public class Hand {
     }
 
     // calculates and returns numerical value of hand
-    public int calcHandValue() { 
+    public int calcHandValue() {
 
         int count = 0;
 
@@ -69,9 +70,8 @@ public class Hand {
         }
     }
 
-
-    public String toString() { 
-        return getHand() + " (value: " + getHandValue() + ")" ;
+    public String toString() {
+        return getHand() + " (value: " + getHandValue() + ")";
     }
 
 }

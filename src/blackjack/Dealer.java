@@ -5,9 +5,9 @@ package blackjack;
  * @author Ivan
  */
 public final class Dealer implements User { //SOLID preferes to use an interface instead
-                                    // of inheritance but i need inheritance for marks
-    private Hand dealerHand;
+    // of inheritance but i need inheritance for marks
 
+    private Hand dealerHand;
 
     public Hand getDealerHand() {
         return dealerHand;
@@ -18,63 +18,64 @@ public final class Dealer implements User { //SOLID preferes to use an interface
     }
 
     public Dealer() {
-        
+
         setDealerHand(new Hand());
     }
 
-    
+    /**
+     * If allowed, adds card to dealers hand. Also corrects for ACE being 11 or 1
+     * @param card 
+     */
     public void hit(Card card) {
 
-        if (dealerHand.getHandValue() >= 11 && card.getValue().equals(Value.ACE)) {
+        if (this.calcHandValue() < 21) {
+            if (this.calcHandValue() >= 11 && card.getValue().equals(Value.ACE)) {
 
-            dealerHand.setHandValue(dealerHand.getHandValue() - 10); // Corrects for ACE being 11 or 1
-            dealerHand.add(card);
+                dealerHand.setHandValue(dealerHand.getHandValue() - 10); // Corrects for ACE being 11 or 1
+                dealerHand.add(card);
+            } else {
+                dealerHand.add(card);
+            }
 
-        } else if (dealerHand.getHandValue() < 21) {
-            dealerHand.add(card);
         }
-
     }
 
+    /**
+     * game logic for dealer's turn
+     *
+     * @param dealer
+     * @param player
+     * @param myDeck
+     * @return
+     */
     public boolean play(Dealer dealer, Player player, Deck myDeck) {
         // DEALER TURN - CAN HIT IF HANDVALUE < 17   
-        boolean isBust =false;
-//        if (dealer.getDealerHand().getHandValue() >= 17) {
-//
-//            
-//        }
-       // if (dealer.getDealerHand().getHandValue() < 17  {
-            // dealer only hits if allowed and is beneficial (i.e player has a higher handvalue than them)
-            while ((dealer.getDealerHand().getHandValue() <= 17) &&
-                (player.getPlayerHand().getHandValue() > dealer.getDealerHand().getHandValue()) 
-                   ||(player.getPlayerHand().getHandValue() - dealer.getDealerHand().getHandValue()) ==1) {
+        boolean isBust = false;
 
-                System.out.println("*Dealer Hit*");
-                this.hit(myDeck.deal());
-                System.out.println(dealer);
+        // dealer only hits if allowed and is beneficial (i.e player has a higher handvalue than them)
+        while ((dealer.calcHandValue() <= 17)
+                && (player.calcHandValue() > dealer.calcHandValue())
+                || (player.calcHandValue() - dealer.calcHandValue()) == 1) {
 
-            }
-                if (this.getDealerHand().getHandValue() > 21) {
-                    System.out.println("*Dealer Bust!*");
-                    isBust=true;
-                    
+            System.out.println("*Dealer Hit*");
+            this.hit(myDeck.deal());
+            System.out.println(dealer);
 
-                    
-                }
-    
-            
-            return isBust;
         }
-    
-    
+        if (dealer.calcHandValue() > 21) {
+            System.out.println("*Dealer Bust!*");
+            isBust = true;
+
+        }
+
+        return isBust;
+    }
+
     @Override
     public int calcHandValue() {
         return this.getDealerHand().getHandValue();
     }
-        
-    
-    
-    
+
     @Override
     public String toString() {
 

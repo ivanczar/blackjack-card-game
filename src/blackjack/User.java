@@ -9,7 +9,6 @@ package blackjack;
  *
  * @author Ivan
  */
-
 // NOTE TO SELF: Implementing classes must implement ALL of these methods
 public interface User {
 
@@ -18,7 +17,5 @@ public interface User {
     public int calcHandValue();
 
     public boolean play(Dealer dealer, Player player, Deck myDeck);
-
-  
 
 }

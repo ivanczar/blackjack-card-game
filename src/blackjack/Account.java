@@ -21,17 +21,18 @@ public class Account {
     /*
     Constructor intitializes member variables and popualtes
     hashmap with txt file data
-    */
+     */
     public Account() {
         this.file = "./resources/blackjackData.txt";
         this.players = new HashMap();
-        this.getPlayers(file); 
+        this.getPlayers(file);
     }
 
-    /*
-    reads from txt file all info stored for each player and stores in
-    hashmap member variable
-    */ 
+    /**
+     * reads from txt file all info stored for each player and stores in 
+     * hashmap  member variable
+     * @param file
+     */
     public void getPlayers(String file) {
         FileInputStream fin;
         try {
@@ -42,7 +43,8 @@ public class Account {
                 String line = fileScan.nextLine(); //stores line in String variable
                 StringTokenizer st = new StringTokenizer(line); // breaks String into tokens
                 Player p = new Player(st.nextToken(), Double.parseDouble(st.nextToken()) // creates player object
-                , Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+                        ,
+                         Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
                 this.players.put(p.getPlayerName(), p); //stores created player in hashmap
 
             }
@@ -54,11 +56,14 @@ public class Account {
         }
     }
 
-    /*
-    checks if playerName already exists in txt file, if yes, it returns its 
-    corresponding object. If no, it creates a new player with default values 
-    and a starting balance
-    */
+    /**
+     * checks if playerName already exists in txt file, if yes, it returns its
+     * corresponding object. If no, it creates a new player with default values
+     * and a starting balance
+     *
+     * @param playerName
+     * @return
+     */
     public Player checkPlayer(String playerName) {
         Player p;
 
@@ -72,9 +77,11 @@ public class Account {
         return p;
     }
 
-    /*
-    updates inputted player's balance by writing to text file
-    */
+    /**
+     * updates inputted player's balance by writing to text file
+     *
+     * @param p
+     */
     public void updateBalance(Player p) {
         this.players.put(p.getPlayerName(), p);
         try {
@@ -82,7 +89,7 @@ public class Account {
             PrintWriter pw = new PrintWriter(fout);
             for (Player player : this.players.values()) {
                 pw.println(player.getPlayerName() + " " + player.getPlayerBalance()
-                     + " " + player.getPlayerWins() + " " + player.getPlayerLoss());
+                        + " " + player.getPlayerWins() + " " + player.getPlayerLoss());
 
             }
             pw.close();

@@ -6,6 +6,6 @@ jorge 85.0 3 0
 123 42.0 1 2
 dawd 53.0 2 0
 faggot 75.0 1 0
-ivoczar 29520.5 47 68
-awd 2.5 3 19
+ivoczar 118658.5 53 70
+awd 0.0 5 22
 dwa 21.0 0 7

@@ -2,4 +2,4 @@
 a 49.0 0 1
 jorge 85.0 3 0
 faggot 75.0 1 0
-ivoczar 30044.5 35 57
+ivoczar 29798.5 35 59

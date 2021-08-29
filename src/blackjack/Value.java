@@ -4,6 +4,7 @@ package blackjack;
  *
  * @author ivanc
  */
+//keeps card value as word and associated numerical value
 public enum Value {
 
     ACE(11),
@@ -22,12 +23,13 @@ public enum Value {
 
     private int cardValue = 0;
 
-    public int getCardValue() {
-        return this.cardValue;
-    }
-
     private Value(int value) {
         this.cardValue = value;
+    }
+
+    // returns numerical value of card
+    public int getCardValue() {
+        return this.cardValue;
     }
 
 }

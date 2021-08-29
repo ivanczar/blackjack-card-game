@@ -61,7 +61,7 @@ public class Deck {
         }
     }
 
-    public String toString() { // prints array
+    public String toString() { 
         return getDeck() + " ";
     }
 

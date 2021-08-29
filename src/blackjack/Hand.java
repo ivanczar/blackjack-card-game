@@ -17,7 +17,7 @@ public class Hand {
         setHand(new ArrayList());
         setHandValue(0);
     }
-
+    // getters and setters
     public ArrayList<Card> getHand() {
         return hand;
     }
@@ -34,7 +34,12 @@ public class Hand {
         this.handValue = handValue;
     }
 
-    public void add(Card card) //adds a card to the players hand array
+    
+    /**
+     * adds a card to the players hand array and updates hand value member variable
+     * @param card 
+     */
+    public void add(Card card) 
     {
 
         getHand().add(card);
@@ -42,7 +47,8 @@ public class Hand {
 
     }
 
-    public int calcHandValue() { // IS RETURN TYPE CORRECT???????
+    // calculates and returns numerical value of hand
+    public int calcHandValue() { 
 
         int count = 0;
 
@@ -54,6 +60,7 @@ public class Hand {
         return count;
     }
 
+    // returns true if hand is blackjack (i.e handvalue ==true)
     public boolean isBlackJack() {
         if (getHandValue() != 21) {
             return false;
@@ -62,12 +69,9 @@ public class Hand {
         }
     }
 
-    public void printHandValue() {
-        System.out.println("Hand Value is: " + this.getHandValue());
-    }
 
-    public String toString() { //prints array
-        return getHand() + "";
+    public String toString() { 
+        return getHand() + " (value: " + getHandValue() + ")" ;
     }
 
 }

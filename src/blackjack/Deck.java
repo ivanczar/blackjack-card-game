@@ -45,14 +45,22 @@ public class Deck {
         return deckCapacity;
     }
 
-//uses shuffle method from Collections library to shuffle the deck via a Random object
+
+    /**
+     * uses shuffle method from Collections library to shuffle the deck via a Random object
+     */
     public void shuffle() { 
 
         long seed = System.currentTimeMillis(); // ensures shuffle is random every time by using system time as seed
         Collections.shuffle(deck, new Random(seed)); 
 
     }
-    // removes and return card from top of deck
+    
+    /**
+     * removes and return card from top of deck
+     * @return Card
+     * @throws NoSuchElementException 
+     */
     public Card deal() throws NoSuchElementException {
         if (!getDeck().isEmpty()) {
             return deck.remove(0); 

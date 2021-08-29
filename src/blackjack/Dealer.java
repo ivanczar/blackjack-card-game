@@ -74,10 +74,11 @@ public final class Dealer implements User { //SOLID preferes to use an interface
         
     
     
+    
     @Override
     public String toString() {
 
-        return "Dealer's hand: " + getDealerHand() + "(value: " + getDealerHand().getHandValue() + ")";
+        return "Dealer's hand: " + getDealerHand();
 
     }
 

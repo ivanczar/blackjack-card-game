@@ -4,7 +4,10 @@ package blackjack;
  *
  * @author ivanc
  */
-//keeps card value as word and associated numerical value
+/**
+ * keeps card value as word and associated numerical value
+ * @author Ivan
+ */
 public enum Value {
 
     ACE(11),
@@ -27,7 +30,10 @@ public enum Value {
         this.cardValue = value;
     }
 
-    // returns numerical value of card
+    /**
+     * returns numerical value of card
+     * @return 
+     */ 
     public int getCardValue() {
         return this.cardValue;
     }

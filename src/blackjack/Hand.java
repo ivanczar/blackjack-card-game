@@ -61,14 +61,7 @@ public class Hand {
         return count;
     }
 
-    // returns true if hand is blackjack (i.e handvalue ==true)
-    public boolean isBlackJack() {
-        if (getHandValue() != 21) {
-            return false;
-        } else {
-            return true;
-        }
-    }
+
 
     public String toString() {
         return getHand() + " (value: " + getHandValue() + ")";

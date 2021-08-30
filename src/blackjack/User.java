@@ -16,6 +16,6 @@ public interface User {
 
     public int calcHandValue();
 
-    public boolean play(Dealer dealer, Player player, Deck myDeck);
+    public void play(Dealer dealer, Player player, Deck myDeck);
 
 }

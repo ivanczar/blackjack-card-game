@@ -15,6 +15,7 @@ public class Player implements User {
     private Hand playerHand;
     private int playerWins;
     private int playerLoss;
+    private boolean playerFinished;
     private double playerBet;
 
     public Player(String userName, double balance, int wins, int losses) {
@@ -23,6 +24,8 @@ public class Player implements User {
         setPlayerBalance(balance);
         setPlayerWins(wins);
         setPlayerLoss(losses);
+        setPlayerFinished(false);
+
     }
 
     public Hand getPlayerHand() {
@@ -78,35 +81,15 @@ public class Player implements User {
         this.playerBet = playerBet;
     }
 
-    /**
-     * returns and prompts user for bet amount, deducts amount from balance and
-     * handles invalid input
-     *
-     * @return
-     * @throws InputMismatchException
-     */
-    public void placeBet() throws InputMismatchException {
-        Scanner scan = new Scanner(System.in);
-        double bet = 0;
-
-        do {
-
-            try {
-                System.out.print("Please enter a bet amount which is below or equal to your current balance: ");
-                bet = scan.nextDouble();
-
-            } catch (InputMismatchException e) {
-
-                System.out.println("Input must be numerical");
-
-            }
-            scan.nextLine(); //clears buffer
-
-        } while (bet > this.getPlayerBalance());
-
-        this.setPlayerBalance(this.getPlayerBalance() - bet); // removes bet amount from players balance
-        setPlayerBet(bet);
+    public boolean getPlayerFinished() {
+        return playerFinished;
     }
+
+    public void setPlayerFinished(boolean playerFinished) {
+        this.playerFinished = playerFinished;
+    }
+
+   
 
     /**
      * If allowed, adds card to player hand. Also corrects for ACE being 11 or 1
@@ -138,68 +121,77 @@ public class Player implements User {
      * @throws InputMismatchException
      */
     @Override
-    public boolean play(Dealer dealer, Player player, Deck myDeck) throws InputMismatchException {
+    public void play(Dealer dealer, Player player, Deck myDeck) { //throws InputMismatchException {
         Scanner scan = new Scanner(System.in);
 
-        int choice = 0;
-        
-        boolean isBust = false;
+        String choice = "o"; // Implement toUpper()!!!!!!!!!!!
 
         // prompts user for action and catches invalid input
-        while (!(choice == 1 || choice == 2)) {
-            try {
+        while (!(choice.equalsIgnoreCase("H") || choice.equalsIgnoreCase("S"))) {
+//            
 
-                System.out.println("Hit(1) or Stand(2)?: ");
-                choice = scan.nextInt();
-                
-
-
-            } catch (InputMismatchException e) {
-   
-                System.out.println("Input must be numerical");
+            System.out.println("(H)it or (S)tand?: ");
+            choice = scan.nextLine();
+            if (choice.equalsIgnoreCase("Q")) {
+                System.out.println("Exiting..");
+                System.exit(0);
             }
-            scan.nextLine();
+            if ((!(choice.equalsIgnoreCase("H") || choice.equalsIgnoreCase("S")))) {
+
+                System.out.println("Not an option,(H)it or (S)tand?: ");
+                choice = scan.nextLine();
+            } else {
+                break;
+            }
+
         }
 
-        while (choice != 2) {
+        while (!choice.equalsIgnoreCase("S")) {
 
             if (player.calcHandValue() < 21) {
 
-                if (choice == 1) { // i.e if player hits
+                player.hit(myDeck.deal()); //deal a card
 
-                    player.hit(myDeck.deal()); //deal a card
+                System.out.println("========================================");
+                System.out.println(player);
+                System.out.println("Dealer's hand: [" + dealer.getDealerHand().getHand().get(0) + ", HIDDEN]  (value: UNKNOWN)");
+                System.out.println("=======================================");
 
-                    System.out.println("========================================");
-                    System.out.println(player);
-                    System.out.println("Dealer's hand: [" + dealer.getDealerHand().getHand().get(0) + ", HIDDEN]  (value: UNKNOWN)");
-                    System.out.println("=======================================");
+                if (player.calcHandValue() > 21) { // if player has bust
+                    player.setPlayerLoss(player.getPlayerLoss() + 1); // increase player loss
+                    System.out.println(player.getPlayerName() + " Bust!");
+                    setPlayerFinished(true);
+                    return;
+                } else {
 
-                    if (player.calcHandValue() > 21) { // if player has bust
-                        player.setPlayerLoss(player.getPlayerLoss() + 1); // increase player loss
-                        System.out.println(player.getPlayerName() + " Bust!");
-                        isBust = true;
-                        return isBust;
-                    } else {
+                    choice = "o";
+                    while (!(choice.equalsIgnoreCase("H") || choice.equalsIgnoreCase("S"))) {
 
-                        choice = 0;
-                        while (!(choice == 1 || choice == 2)) {
-                            try {
-                                System.out.println("Type 1 to Hit or 2 to Stand: ");
-                                choice = scan.nextInt();
-                            } catch (InputMismatchException e) {
-                                System.out.println("Input must be numerical");
-                            }
-                            scan.nextLine();
+                        System.out.println("(H)it or (S)tand?: ");
+                        choice = scan.nextLine();
+                        if (choice.equalsIgnoreCase("Q")) {
+                            System.out.println("Exiting..");
+                            System.exit(0);
+                        }
+                        if ((!(choice.equalsIgnoreCase("H") || choice.equalsIgnoreCase("S")))) {
+
+                            System.out.println("Not an option,(H)it or (S)tand?: ");
+                            choice = scan.nextLine();
+                        } else {
+                            break;
                         }
 
                     }
+
                 }
+
             }
 
         }
 
         System.out.println(player.getPlayerName() + " stands!");
-        return isBust;
+        setPlayerFinished(true);
+        return;
     }
 
     @Override

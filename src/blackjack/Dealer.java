@@ -4,10 +4,12 @@ package blackjack;
  *
  * @author Ivan
  */
-public final class Dealer implements User { //SOLID preferes to use an interface instead
-    // of inheritance but i need inheritance for marks
+public final class Dealer implements User {
 
+//SOLID preferes to use an interface instead
+    // of inheritance but i need inheritance for marks
     private Hand dealerHand;
+    private boolean dealerFinished;
 
     public Hand getDealerHand() {
         return dealerHand;
@@ -17,14 +19,25 @@ public final class Dealer implements User { //SOLID preferes to use an interface
         this.dealerHand = dealerHand;
     }
 
+    public boolean getDealerFinished() {
+        return dealerFinished;
+    }
+
+    public void setDealerFinished(boolean dealerFinished) {
+        this.dealerFinished = dealerFinished;
+    }
+
     public Dealer() {
 
         setDealerHand(new Hand());
+        setDealerFinished(false);
     }
 
     /**
-     * If allowed, adds card to dealers hand. Also corrects for ACE being 11 or 1
-     * @param card 
+     * If allowed, adds card to dealers hand. Also corrects for ACE being 11 or
+     * 1
+     *
+     * @param card
      */
     public void hit(Card card) {
 
@@ -48,9 +61,8 @@ public final class Dealer implements User { //SOLID preferes to use an interface
      * @param myDeck
      * @return
      */
-    public boolean play(Dealer dealer, Player player, Deck myDeck) {
+    public void play(Dealer dealer, Player player, Deck myDeck) {
         // DEALER TURN - CAN HIT IF HANDVALUE < 17   
-        boolean isBust = false;
 
         // dealer only hits if allowed and is beneficial (i.e player has a higher handvalue than them)
         while ((dealer.calcHandValue() < 17)
@@ -63,11 +75,15 @@ public final class Dealer implements User { //SOLID preferes to use an interface
         }
         if (dealer.calcHandValue() > 21) {
             System.out.println("*Dealer Bust!*");
-            isBust = true;
+            System.out.println("\n===============" + player.getPlayerName() + " wins!==========");
+            player.setPlayerBalance(player.getPlayerBalance() + (player.getPlayerBet() * 1.5));
+            player.setPlayerWins(player.getPlayerWins() + 1);
+            setDealerFinished(true);
+            return;
 
         }
 
-        return isBust;
+        return;
     }
 
     @Override

@@ -24,22 +24,22 @@ public class BJDriver {
                 + "Blackjack means you win 2x the amount of your bet. Winning without blackjack is 1.5x.\n"
                 + "Dealer will hit until their cards total 17 or higher.");
 
-        char playAgain = 'n';
-        
         Account acc = new Account();
         Scanner scan = new Scanner(System.in);
+        System.out.println("You can enter 'q' at anytime to quit the game. WARNING: ONCE A BET IS PLACED IT WILL NOT BE RETURNED.");
         System.out.print("\n\nWelcome to BlackJack! Please enter your name "
                 + "(case sensitive) to access your account. Otherwise a new "
                 + "account under this name will be created for you: ");
-        String userName = scan.next();
         
 
-        do{
+        String userName = scan.next();
+        if (userName.trim().equalsIgnoreCase("q")) {
+            
+            System.exit(0);
+        }
         Player player = acc.checkPlayer(userName);
         Match match = new Match(player);
         acc.updateBalance(player);
-            System.out.println("Play again? y/n");
-        }while(scan.next().charAt(0) == 'y');
 
     }
 

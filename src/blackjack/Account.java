@@ -69,6 +69,13 @@ public class Account {
 
         if (this.players.containsKey(playerName)) {
             p = this.players.get(playerName);
+            if (p.getPlayerBalance()== 0){ // checks if players balance is 0
+                System.out.println("ERROR: Your balance is 0. Please try:"
+                        + "\n- Getting a job"
+                        + "\n- Getting a loan"
+                        + "\n- Creating an account under a diffearent name");
+                System.exit(0);
+            }
 
         } else {
             p = new Player(playerName, 50, 0, 0);

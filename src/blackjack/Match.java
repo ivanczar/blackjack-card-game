@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class Match {
 
     final int DECKCAPACITY = 52;
-    double playerBet = 0;
+   // double playerBet = 0;
 
     Deck myDeck = new Deck(DECKCAPACITY); // instantiates a deck object     
     Dealer dealer = new Dealer();
@@ -27,7 +27,8 @@ public class Match {
         System.out.println("Welcome " + player.getPlayerName() + ", You have " + player.getPlayerWins() + " wins, " + player.getPlayerLoss()
                 + " losses and currently have a balance of $" + player.getPlayerBalance());
 
-        playerBet = player.placeBet(); // sets bet to value returned by placeBet()
+       // playerBet = player.placeBet(); // sets bet to value returned by placeBet()
+       player.placeBet();
 
 
         while (true) {
@@ -43,24 +44,24 @@ public class Match {
 
                 printState(player, dealer);
                 System.out.println("Tie - Game Over");
-                player.setPlayerBalance(player.getPlayerBalance() + (playerBet)); // return bet to player
+                player.setPlayerBalance(player.getPlayerBalance() + (player.getPlayerBet())); // return bet to player
 
-                // return;
+                return;
             } else if (player.getPlayerHand().isBlackJack()) { // if player has blackjack
 
                 printState(player, dealer);
                 System.out.println("BlackJack, You Won!");
-                player.setPlayerBalance(player.getPlayerBalance() + (playerBet * 2)); // pay player
+                player.setPlayerBalance(player.getPlayerBalance() + (player.getPlayerBet() * 2)); // pay player
                 player.setPlayerWins(player.getPlayerWins() + 1);
 
-                //  return;
+                return;
             } else if (dealer.getDealerHand().isBlackJack()) { // if dealer has blackjack
                 printState(player, dealer);
                 System.out.println(dealer);
                 System.out.println("Whoops, house got blackjack");
                 player.setPlayerLoss(player.getPlayerLoss() + 1);
 
-                //return;
+                return;
             } else {
 
                 System.out.println("========================================");
@@ -72,7 +73,7 @@ public class Match {
                 if (player.play(dealer, player, myDeck)) // if player busts
                 {
                     System.out.println("\n===============Dealer wins!============");
-                    // return;
+                    return;
 
                 }
 
@@ -83,9 +84,9 @@ public class Match {
                 {
 
                     System.out.println("\n===============" + player.getPlayerName() + " wins!==========");
-                    player.setPlayerBalance(player.getPlayerBalance() + (playerBet * 1.5));
+                    player.setPlayerBalance(player.getPlayerBalance() + (player.getPlayerBet() * 1.5));
                     player.setPlayerWins(player.getPlayerWins() + 1);
-                    //return;
+                    return;
 
                 }
 
@@ -93,25 +94,25 @@ public class Match {
                 if (dealer.getDealerHand().getHandValue() == player.getPlayerHand().getHandValue()) // tie
                 {
                     System.out.println("\n======Tie!======");
-                    player.setPlayerBalance(player.getPlayerBalance() + (playerBet)); // return bet to player
+                    player.setPlayerBalance(player.getPlayerBalance() + (player.getPlayerBet())); // return bet to player
 
-                    // return;
+                    return;
                 } else if (dealer.getDealerHand().getHandValue() > player.getPlayerHand().getHandValue() && dealer.getDealerHand().getHandValue() <= 21) // dealer wins
                 {
                     System.out.println("\n======Dealer wins!======");
                     player.setPlayerLoss(player.getPlayerLoss() + 1);
 
-                    //return;
+                    return;
                 } else if (dealer.getDealerHand().getHandValue() < player.getPlayerHand().getHandValue() && player.getPlayerHand().getHandValue() <= 21)// player wins
                 {
                     System.out.println("\n======" + player.getPlayerName() + " wins!======");
-                    player.setPlayerBalance(player.getPlayerBalance() + (playerBet * 1.5));
+                    player.setPlayerBalance(player.getPlayerBalance() + (player.getPlayerBet() * 1.5));
                     player.setPlayerWins(player.getPlayerWins() + 1);
 
-                    //return;
+                    return;
                 }
             }
-            break;
+           // break;
         }
 
     }

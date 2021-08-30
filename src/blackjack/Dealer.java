@@ -53,9 +53,8 @@ public final class Dealer implements User { //SOLID preferes to use an interface
         boolean isBust = false;
 
         // dealer only hits if allowed and is beneficial (i.e player has a higher handvalue than them)
-        while ((dealer.calcHandValue() <= 17)
-                && (player.calcHandValue() > dealer.calcHandValue())
-                || (player.calcHandValue() - dealer.calcHandValue()) == 1) {
+        while ((dealer.calcHandValue() < 17)
+                && (player.calcHandValue() > dealer.calcHandValue())) {
 
             System.out.println("*Dealer Hit*");
             this.hit(myDeck.deal());

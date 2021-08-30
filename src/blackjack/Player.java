@@ -15,6 +15,7 @@ public class Player implements User {
     private Hand playerHand;
     private int playerWins;
     private int playerLoss;
+    private double playerBet;
 
     public Player(String userName, double balance, int wins, int losses) {
         setPlayerHand(new Hand());
@@ -69,6 +70,14 @@ public class Player implements User {
         return this.getPlayerHand().getHandValue();
     }
 
+    public double getPlayerBet() {
+        return playerBet;
+    }
+
+    public void setPlayerBet(double playerBet) {
+        this.playerBet = playerBet;
+    }
+
     /**
      * returns and prompts user for bet amount, deducts amount from balance and
      * handles invalid input
@@ -76,7 +85,7 @@ public class Player implements User {
      * @return
      * @throws InputMismatchException
      */
-    public double placeBet() throws InputMismatchException {
+    public void placeBet() throws InputMismatchException {
         Scanner scan = new Scanner(System.in);
         double bet = 0;
 
@@ -95,8 +104,8 @@ public class Player implements User {
 
         } while (bet > this.getPlayerBalance());
 
-        this.setPlayerBalance(this.getPlayerBalance() - bet); // removes bet amount from balance
-        return bet;
+        this.setPlayerBalance(this.getPlayerBalance() - bet); // removes bet amount from players balance
+        setPlayerBet(bet);
     }
 
     /**
@@ -133,6 +142,7 @@ public class Player implements User {
         Scanner scan = new Scanner(System.in);
 
         int choice = 0;
+        
         boolean isBust = false;
 
         // prompts user for action and catches invalid input
@@ -141,8 +151,11 @@ public class Player implements User {
 
                 System.out.println("Hit(1) or Stand(2)?: ");
                 choice = scan.nextInt();
+                
+
 
             } catch (InputMismatchException e) {
+   
                 System.out.println("Input must be numerical");
             }
             scan.nextLine();

@@ -12,13 +12,19 @@ public class Match {
     final int DECKCAPACITY = 52;
     // double playerBet = 0;
 
-    EndGame end = new EndGame();
-    Deck myDeck = new Deck(DECKCAPACITY); // instantiates a deck object     
-    Dealer dealer = new Dealer();
-    CheckBJ checkBJ = new CheckBJ();
-    Bet bet = new Bet();
+    EndGame end;
+    Deck myDeck; // instantiates a deck object     
+    Dealer dealer;
+    CheckBJ checkBJ;
+    Bet bet;
 
     public Match(Player player) {
+        end = new EndGame();
+        myDeck = new Deck(DECKCAPACITY);
+        dealer = new Dealer();
+        checkBJ = new CheckBJ();
+        bet = new Bet();
+      
         this.begin(player);
     }
 
@@ -41,30 +47,32 @@ public class Match {
                 dealer.hit(myDeck.deal());
             }
 
+            
+            printState(player, dealer);
             checkBJ.checkBlackJack(player, dealer);
 
-            printState(player, dealer);
+            
 
+            
             // USER'S TURN   
             if ((!(player.getPlayerFinished() || dealer.getDealerFinished()))) {
                 player.play(dealer, player, myDeck);
             }
-            printState(player, dealer);
-            if (!(player.getPlayerFinished())) {
-
-                // dealers turn if player has stood/not bust
+            
+            if ((player.calcHandValue()<21)) {//is player hasnt bust
+                printState(player, dealer);
+                // DEALERS TURN if player has stood/not bust
                 dealer.play(dealer, player, myDeck);
             }
 
         }
-        
-        end.winCondition(player,dealer);
-        
-        
+
+        end.winCondition(player, dealer);
+
         bet.settleBet(player);
 
-
     }
+
     // break;
     public void printState(Player player, Dealer dealer) {
         System.out.println("=================================================================");
@@ -72,44 +80,55 @@ public class Match {
         System.out.println(dealer);
         System.out.println("=================================================================");
     }
-        static class EndGame{
-        
+
+    static class EndGame {
+
         static int winner = 0;
+
         /**
          * Determines who won and updates wins/losses
+         *
          * @param player
-         * @param dealer 
+         * @param dealer
          */
-        public void winCondition(Player player, Dealer dealer){
-                    //Checks winning conditions
-        if (dealer.getDealerHand().getHandValue() == player.getPlayerHand().getHandValue()) // tie
-        {
-            System.out.println("\n======Tie!======");
-           // player.setPlayerBalance(player.getPlayerBalance() + (bet.getBetAmount())); // return bet to player
+        public void winCondition(Player player, Dealer dealer) {
+            //Checks winning conditions
+            if(player.calcHandValue() > 21) // if player busts
+            {
+                System.out.println(player.getPlayerName() + " bust!");
+                System.out.println("Dealer wins");
+                player.setPlayerLoss(player.getPlayerLoss() + 1);
+            }
+            if(dealer.calcHandValue() > 21) // if dealer busts
+            {
+                 System.out.println("Dealer bust!");
+                System.out.println(player.getPlayerName() +" wins");
+                player.setPlayerWins(player.getPlayerWins() + 1);
+                this.winner = 3;
+            }
+            if (dealer.getDealerHand().getHandValue() == player.getPlayerHand().getHandValue()) // tie
+            {
+                System.out.println("\n======Tie!======");
+              
 
-            this.winner =1;
-        } else if (dealer.getDealerHand().getHandValue() > player.getPlayerHand().getHandValue() && dealer.getDealerHand().getHandValue() <= 21) // dealer wins
-        {
-            System.out.println("\n======Dealer wins!======");
-            player.setPlayerLoss(player.getPlayerLoss() + 1);
+                this.winner = 1;
+            } else if (dealer.getDealerHand().getHandValue() > player.getPlayerHand().getHandValue() && dealer.getDealerHand().getHandValue() <= 21) // dealer wins
+            {
+                System.out.println("\n======Dealer wins!======");
+                player.setPlayerLoss(player.getPlayerLoss() + 1);
 
-            this.winner=2;
-        } else if (dealer.getDealerHand().getHandValue() < player.getPlayerHand().getHandValue() && player.getPlayerHand().getHandValue() <= 21)// player wins
-        {
-            System.out.println("\n======" + player.getPlayerName() + " wins!======");
-            //player.setPlayerBalance(player.getPlayerBalance() + (bet.getBetAmount() * 1.5));
-            player.setPlayerWins(player.getPlayerWins() + 1);
+                this.winner = 2;
+            } else if (dealer.getDealerHand().getHandValue() < player.getPlayerHand().getHandValue() && player.getPlayerHand().getHandValue() <= 21)// player wins
+            {
+                System.out.println("\n======" + player.getPlayerName() + " wins!======");
+                
+                player.setPlayerWins(player.getPlayerWins() + 1);
 
-            this.winner=3;
+                this.winner = 3;
+            }
+
         }
-            System.out.println(this.winner + "IS WINNER");
-        }
-        
-        
-        
+
     }
 
 }
-
-
-

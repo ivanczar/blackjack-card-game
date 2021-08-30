@@ -66,18 +66,14 @@ public final class Dealer implements User {
 
         // dealer only hits if allowed and is beneficial (i.e player has a higher handvalue than them)
         while ((dealer.calcHandValue() < 17)
-                && (player.calcHandValue() > dealer.calcHandValue())) {
+                && (player.calcHandValue() > dealer.calcHandValue())){
 
             System.out.println("*Dealer Hit*");
             this.hit(myDeck.deal());
-            System.out.println(dealer);
+            
 
         }
-        if (dealer.calcHandValue() > 21) {
-            System.out.println("*Dealer Bust!*");
-            System.out.println("\n===============" + player.getPlayerName() + " wins!==========");
-            player.setPlayerBalance(player.getPlayerBalance() + (player.getPlayerBet() * 1.5));
-            player.setPlayerWins(player.getPlayerWins() + 1);
+        if (dealer.calcHandValue() > 21) {            
             setDealerFinished(true);
             return;
 

@@ -15,8 +15,7 @@ import java.util.Scanner;
  */
 public class Bet {
 
-    EndGame end = new EndGame();
-    static private double betAmount = 0;
+    static private double betAmount = 0; // static so accessible by all instances
 
     public Bet() {
         setBetAmount(0);
@@ -40,43 +39,62 @@ public class Bet {
     public void placeBet(Player player) throws InputMismatchException {
         Scanner scan = new Scanner(System.in);
 
-        double playerBet = 0;
+        
+        
         do {
-
             try {
+                String playerBet = "0";
                 System.out.print("Please enter a bet amount which is below or equal to your current balance: ");
-                playerBet = scan.nextDouble();
+                playerBet = scan.nextLine();
 
-            } catch (InputMismatchException e) {
-
-                System.out.println("Input must be numerical");
-
+                if (playerBet.equalsIgnoreCase("q")) {
+                    System.out.println("Exiting...");
+                    System.exit(0);
+                }
+                else{
+                    int numBet = Integer.parseInt(playerBet);
+                    player.setPlayerBalance(player.getPlayerBalance() - numBet); // removes bet amount from players balance
+                    if (numBet > player.getPlayerBalance())
+                    {
+                        
+                        System.out.println("Make sure bet is below your balance amount: ");
+                        playerBet = scan.nextLine();
+                    }
+                        
+                        setBetAmount(numBet);
+                        break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Please try again");
             }
-            scan.nextLine(); //clears buffer
 
-        } while (playerBet > player.getPlayerBalance());
-        System.out.println("IN PLACEBET before set: BET AMOUNT IS: " + this.getBetAmount());
-        player.setPlayerBalance(player.getPlayerBalance() - playerBet); // removes bet amount from players balance
-        setBetAmount(playerBet);
-        System.out.println("IN PLACEBET after set: BET AMOUNT IS: " + this.getBetAmount());
+        } while (true);
+
+
+
     }
 
+    /**
+     * Pays player if they tie/win
+     *
+     * @param player
+     */
     public void settleBet(Player player) {
         Dealer dealer = new Dealer();
+        EndGame end = new EndGame();
 
-        
         switch (end.winner) {
-            case 1:
+            case 1: //if tie return bet
                 player.setPlayerBalance(player.getPlayerBalance() + (this.getBetAmount()));
-                System.out.println("SETTLEBET TIE");
+
                 break;
-            
-            case 3:
-                System.out.println("IN SETTLEBET case 3: BET AMOUNT IS: " + this.getBetAmount());
+
+            case 3: // if player wins returns bet + 1.5xbet
+
+                player.setPlayerBalance(player.getPlayerBalance() + (this.getBetAmount()));
                 player.setPlayerBalance(player.getPlayerBalance() + ((this.getBetAmount() * 1.5)));
-                System.out.println("SETTLEBET WIN");
+
                 break;
-            
 
         }
 

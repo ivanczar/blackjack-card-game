@@ -28,6 +28,7 @@ public class Hand {
     }
 
     public int getHandValue() {
+        Player player;
         return handValue;
     }
 
@@ -49,7 +50,7 @@ public class Hand {
     }
 
     // calculates and returns numerical value of hand
-    public int calcHandValue() {
+    public int calcHandValue(User user) {
 
         int count = 0;
 
@@ -59,8 +60,8 @@ public class Hand {
 
         }
         return count;
+        
     }
-
 
 
     public String toString() {

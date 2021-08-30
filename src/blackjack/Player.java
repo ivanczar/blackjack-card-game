@@ -16,6 +16,7 @@ public class Player implements User {
     private int playerWins;
     private int playerLoss;
     private boolean playerFinished;
+    
     private double playerBet;
 
     public Player(String userName, double balance, int wins, int losses) {
@@ -68,18 +69,7 @@ public class Player implements User {
         this.playerLoss = playerLoss;
     }
 
-    @Override
-    public int calcHandValue() {
-        return this.getPlayerHand().getHandValue();
-    }
 
-    public double getPlayerBet() {
-        return playerBet;
-    }
-
-    public void setPlayerBet(double playerBet) {
-        this.playerBet = playerBet;
-    }
 
     public boolean getPlayerFinished() {
         return playerFinished;
@@ -89,8 +79,12 @@ public class Player implements User {
         this.playerFinished = playerFinished;
     }
 
-   
 
+
+        @Override
+    public int calcHandValue() {
+        return this.getPlayerHand().getHandValue();
+    }
     /**
      * If allowed, adds card to player hand. Also corrects for ACE being 11 or 1
      *
@@ -118,13 +112,13 @@ public class Player implements User {
      * @param player
      * @param myDeck
      * @return
-     * @throws InputMismatchException
+     * 
      */
     @Override
-    public void play(Dealer dealer, Player player, Deck myDeck) { //throws InputMismatchException {
+    public void play(Dealer dealer, Player player, Deck myDeck) { 
         Scanner scan = new Scanner(System.in);
 
-        String choice = "o"; // Implement toUpper()!!!!!!!!!!!
+        String choice = "o"; 
 
         // prompts user for action and catches invalid input
         while (!(choice.equalsIgnoreCase("H") || choice.equalsIgnoreCase("S"))) {
@@ -148,7 +142,7 @@ public class Player implements User {
 
         while (!choice.equalsIgnoreCase("S")) {
 
-            if (player.calcHandValue() < 21) {
+            if (player.calcHandValue() <= 21) {
 
                 player.hit(myDeck.deal()); //deal a card
 
@@ -158,9 +152,10 @@ public class Player implements User {
                 System.out.println("=======================================");
 
                 if (player.calcHandValue() > 21) { // if player has bust
-                    player.setPlayerLoss(player.getPlayerLoss() + 1); // increase player loss
-                    System.out.println(player.getPlayerName() + " Bust!");
+                    
+                    
                     setPlayerFinished(true);
+                    
                     return;
                 } else {
 
@@ -176,7 +171,7 @@ public class Player implements User {
                         if ((!(choice.equalsIgnoreCase("H") || choice.equalsIgnoreCase("S")))) {
 
                             System.out.println("Not an option,(H)it or (S)tand?: ");
-                            choice = scan.nextLine();
+                            scan.next();
                         } else {
                             break;
                         }

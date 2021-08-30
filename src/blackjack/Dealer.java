@@ -70,6 +70,7 @@ public final class Dealer implements User {
 
             System.out.println("*Dealer Hit*");
             this.hit(myDeck.deal());
+            System.out.println(dealer);
             
 
         }

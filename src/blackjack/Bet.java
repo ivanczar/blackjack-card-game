@@ -5,7 +5,7 @@
  */
 package blackjack;
 
-import blackjack.Match.EndGame;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -75,18 +75,22 @@ public class Bet {
     }
 
     /**
-     * Pays player if they tie/win
+     * Pays player depending on match outcome
      *
      * @param player
      */
     public void settleBet(Player player) {
         Dealer dealer = new Dealer();
-        EndGame end = new EndGame();
+        CheckWinner end = new CheckWinner();
 
         switch (end.winner) {
             case 1: //if tie return bet
                 player.setPlayerBalance(player.getPlayerBalance() + (this.getBetAmount()));
 
+                break;
+                
+            case 2:
+                player.setPlayerBalance(player.getPlayerBalance() + ((this.getBetAmount() * 2)));
                 break;
 
             case 3: // if player wins returns bet + 1.5xbet

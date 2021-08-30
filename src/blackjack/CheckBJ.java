@@ -25,25 +25,18 @@ public class CheckBJ {
         if (this.isBlackJack(player) && this.isBlackJack(dealer)) { // if both have blackjack
 
             System.out.println("Tie - Game Over");
-//            player.setPlayerBalance(player.getPlayerBalance() + (player.getPlayerBet())); // return bet to player
             dealer.setDealerFinished(true);
             player.setPlayerFinished(true);
-            
 
         } else if (this.isBlackJack(player)) { // if player has blackjack
 
             System.out.println("BlackJack, You Won!");
-//            player.setPlayerBalance(player.getPlayerBalance() + (player.getPlayerBet() * 2)); // pay player
-            player.setPlayerWins(player.getPlayerWins() + 1);
             player.setPlayerFinished(true);
-            
 
         } else if (this.isBlackJack(dealer)) {
-            
+
             System.out.println("Whoops, house got blackjack");
-            player.setPlayerLoss(player.getPlayerLoss() + 1);
             dealer.setDealerFinished(true);
-            
 
         }
 

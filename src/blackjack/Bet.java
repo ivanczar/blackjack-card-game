@@ -16,10 +16,9 @@ public class Bet {
 
     static private double betAmount = 0; // static so accessible by all instances
 
-    public Bet() {
-        setBetAmount(0);
-    }
-
+//    public Bet() {
+//        setBetAmount(0);
+//    }
     public double getBetAmount() {
         return betAmount;
     }
@@ -36,41 +35,13 @@ public class Bet {
      * @throws InputMismatchException
      */
     public void placeBet(Player player) throws InputMismatchException {
-        Scanner scan = new Scanner(System.in);
 
-        do {
-            try {
-                String playerBet = "0";
-                System.out.print("Please enter a bet amount which is below or equal to your current balance: ");
-                playerBet = scan.nextLine();
+        Prompt prompt = new Prompt();
 
-                if (playerBet.equalsIgnoreCase("q")) {
-                    System.out.println("Exiting...");
-                    System.exit(0);
-                } else {
-                    double numBet = Double.parseDouble(playerBet);
+        double numBet = prompt.betPrompt(player);
 
-                    if (numBet > player.getPlayerBalance() || numBet < 0) {
-
-                        System.err.println("Make sure bet is above 0 and below your balance amount: ");
-                        playerBet = scan.nextLine();
-                        if (playerBet.equalsIgnoreCase("q")) {
-                            System.out.println("Exiting...");
-                            System.exit(0);
-                        }
-                    }
-
-                    setBetAmount(numBet);
-                    player.setPlayerBalance(player.getPlayerBalance() - numBet); // removes bet amount from players balance
-                    break;
-                }
-            } catch (NumberFormatException e) {
-                System.err.println("Input must be numerical ");
-
-            }
-
-        } while (true);
-
+        setBetAmount(numBet);
+        player.setPlayerBalance(player.getPlayerBalance() - numBet); // removes bet amount from players balance
     }
 
     /**

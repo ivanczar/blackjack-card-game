@@ -114,7 +114,6 @@ public class Player implements User {
     @Override
     public void play(Dealer dealer, Player player, Deck myDeck) {
         Scanner scan = new Scanner(System.in);
-
         String choice = "o";
 
         // prompts user for action and catches invalid input

@@ -28,7 +28,7 @@ public class BJDriver {
 
         Scanner scan = new Scanner(System.in);
         System.out.println("You can enter 'q' at anytime to quit the game. WARNING: ONCE A BET IS PLACED IT WILL NOT BE RETURNED.");
-        System.out.print("\n\nWelcome to BlackJack! Please enter your name "
+        System.out.print("\nWelcome to BlackJack! Please enter your name "
                 + "(case sensitive) to access your account. Otherwise a new "
                 + "account under this name will be created for you: ");
 

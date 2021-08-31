@@ -34,7 +34,7 @@ public class Match {
 
         // Prints state of player and prompts user for a bet amount
         System.out.println("Welcome " + player.getPlayerName() + ", You have " + player.getPlayerWins() + " wins, " + player.getPlayerLoss()
-                + " losses and currently have a balance of $" + player.getPlayerBalance());
+                + " losses and currently have a balance of $" + player.getPlayerBalance() + "\n");
 
         // playerBet = player.placeBet(); // sets bet to value returned by placeBet()
         bet.placeBet(player);
@@ -63,6 +63,7 @@ public class Match {
 
         }
 
+        System.out.println("ACTUAL PLAYER VALUE: " + player.calcHandValue());
         checkWinner.winCondition(player, dealer);
 
         bet.settleBet(player);

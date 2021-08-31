@@ -44,10 +44,10 @@ public final class Dealer implements User {
         if (this.calcHandValue() < 21) {
             if (this.calcHandValue() >= 11 && card.getValue().equals(Value.ACE)) {
 
-                dealerHand.setHandValue(dealerHand.getHandValue() - 10); // Corrects for ACE being 11 or 1
-                dealerHand.add(card);
+                getDealerHand().setHandValue(getDealerHand().getHandValue() - 10); // Corrects for ACE being 11 or 1
+                getDealerHand().add(card);
             } else {
-                dealerHand.add(card);
+                getDealerHand().add(card);
             }
 
         }

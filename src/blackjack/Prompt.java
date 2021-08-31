@@ -51,10 +51,50 @@ public class Prompt {
 
     }
 
-    public int playerPlayPrompt() {
-        int choice = 0;
+    public void playerState(Player player, Dealer dealer, Deck myDeck) {
+        
+        System.out.println("========================================");
+        System.out.println(player);
+        System.out.println("Dealer's hand: [" + dealer.getDealerHand().getHand().get(0) + ", HIDDEN]  (value: UNKNOWN)");
+        System.out.println("=======================================");
+    }
 
-        return choice;
+    public int playerPlayPrompt() {
+        Scanner scan = new Scanner(System.in);
+        // prompts user for action and catches invalid input
+        do {
+            try {
+                String choice = "0";
+                System.out.print("Hit(1) or Stand(2)?: ");
+                choice = scan.nextLine();
+
+                if (choice.equalsIgnoreCase("q")) {
+                    System.out.println("Exiting...");
+                    System.exit(0);
+                } else {
+
+                    
+                    if (!((Integer.valueOf(choice) == 1 )|| (Integer.valueOf(choice) == 2))) {
+
+                        System.out.println("That is not an option!: ");
+                        choice = scan.nextLine();
+                        if (choice.equalsIgnoreCase("q")) {
+                            System.out.println("Exiting...");
+                            System.exit(0);
+                        }
+
+                    }
+                    Integer numChoice = Integer.parseInt(choice);
+
+                    return numChoice;
+
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Input must be numerical ");
+
+            }
+
+        } while (true);
     }
 
 }

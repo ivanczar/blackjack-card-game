@@ -113,41 +113,16 @@ public class Player implements User {
      */
     @Override
     public void play(Dealer dealer, Player player, Deck myDeck) {
-        Scanner scan = new Scanner(System.in);
-        String choice = "o";
 
-        // prompts user for action and catches invalid input
-        while (!(choice.equalsIgnoreCase("H") || choice.equalsIgnoreCase("S"))) {
-//            
-            System.out.println("========================================");
-            System.out.println(player);
-            System.out.println("Dealer's hand: [" + dealer.getDealerHand().getHand().get(0) + ", HIDDEN]  (value: UNKNOWN)");
-            System.out.println("=======================================");
-            
-            System.out.println("(H)it or (S)tand?: ");
-            choice = scan.nextLine();
-            if (choice.equalsIgnoreCase("Q")) {
-                System.out.println("Exiting..");
-                System.exit(0);
-            }
-            if ((!(choice.equalsIgnoreCase("H") || choice.equalsIgnoreCase("S")))) {
+        Prompt prompt = new Prompt();
 
-                System.out.println("Not an option,(H)it or (S)tand?: ");
-                choice = scan.nextLine();
-            } else {
-                break;
-            }
+        prompt.playerState(player, dealer, myDeck);
 
-        }
+        int choice = prompt.playerPlayPrompt();
 
-        while (!choice.equalsIgnoreCase("S") && player.calcHandValue() <= 21) {
-
+        while (choice != 2 && player.calcHandValue() <= 21) {
             player.hit(myDeck.deal()); //deal a card
-
-            System.out.println("========================================");
-            System.out.println(player);
-            System.out.println("Dealer's hand: [" + dealer.getDealerHand().getHand().get(0) + ", HIDDEN]  (value: UNKNOWN)");
-            System.out.println("=======================================");
+            prompt.playerState(player, dealer, myDeck);
 
             if (player.calcHandValue() > 21) { // if player has bust
 
@@ -156,24 +131,7 @@ public class Player implements User {
                 return;
             } else {
 
-                choice = "o";
-                while (!(choice.equalsIgnoreCase("H") || choice.equalsIgnoreCase("S"))) {
-
-                    System.out.println("(H)it or (S)tand?: ");
-                    choice = scan.nextLine();
-                    if (choice.equalsIgnoreCase("Q")) {
-                        System.out.println("Exiting..");
-                        System.exit(0);
-                    }
-                    if ((!(choice.equalsIgnoreCase("H") || choice.equalsIgnoreCase("S")))) {
-
-                        System.out.println("Not an option,(H)it or (S)tand?: ");
-                        scan.next();
-                    } else {
-                        break;
-                    }
-
-                }
+                choice = prompt.playerPlayPrompt();;
 
             }
 

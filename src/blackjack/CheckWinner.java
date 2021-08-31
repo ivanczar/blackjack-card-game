@@ -29,14 +29,14 @@ public class CheckWinner {
 
         if (player.calcHandValue() > 21) // if player busts
         {
-            System.out.println(player.getPlayerName() + " bust!");
-            System.out.println("Dealer wins");
+            System.out.println("*"+player.getPlayerName().toUpperCase() + " BUST!*");
+            System.out.println("=======Dealer wins=========");
             player.setPlayerLoss(player.getPlayerLoss() + 1);
         }
         if (dealer.calcHandValue() > 21) // if dealer busts
         {
-            System.out.println("Dealer bust!");
-            System.out.println(player.getPlayerName() + " wins");
+            System.out.println("*DEALER BUST!*");
+            System.out.println("======="+player.getPlayerName().toUpperCase() + " wins!========");
             player.setPlayerWins(player.getPlayerWins() + 1);
             this.winner = 3;
         }

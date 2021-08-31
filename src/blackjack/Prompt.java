@@ -52,7 +52,7 @@ public class Prompt {
     }
 
     public void playerState(Player player, Dealer dealer, Deck myDeck) {
-        
+
         System.out.println("========================================");
         System.out.println(player);
         System.out.println("Dealer's hand: [" + dealer.getDealerHand().getHand().get(0) + ", HIDDEN]  (value: UNKNOWN)");
@@ -73,8 +73,7 @@ public class Prompt {
                     System.exit(0);
                 } else {
 
-                    
-                    if (!((Integer.valueOf(choice) == 1 )|| (Integer.valueOf(choice) == 2))) {
+                    if (!((Integer.valueOf(choice) == 1) || (Integer.valueOf(choice) == 2))) {
 
                         System.out.println("That is not an option!: ");
                         choice = scan.nextLine();

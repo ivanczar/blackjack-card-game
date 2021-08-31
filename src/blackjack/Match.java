@@ -63,7 +63,7 @@ public class Match {
 
         }
 
-        System.out.println("ACTUAL PLAYER VALUE: " + player.calcHandValue());
+        
         checkWinner.winCondition(player, dealer);
 
         bet.settleBet(player);

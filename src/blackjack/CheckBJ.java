@@ -30,12 +30,12 @@ public class CheckBJ {
 
         } else if (this.isBlackJack(player)) { // if player has blackjack
 
-            System.out.println("BlackJack, You Won!");
+            System.err.println("BlackJack, You Won!");
             player.setPlayerFinished(true);
 
         } else if (this.isBlackJack(dealer)) {
 
-            System.out.println("Whoops, house got blackjack");
+            System.err.println("Whoops, house got blackjack");
             dealer.setDealerFinished(true);
 
         }

@@ -68,7 +68,7 @@ public final class Dealer implements User {
         while ((dealer.calcHandValue() < 17)
                 && (player.calcHandValue() > dealer.calcHandValue())){
 
-            System.out.println("*Dealer Hit*");
+            System.out.println("*DEALER HITS*");
             this.hit(myDeck.deal());
             System.out.println(dealer);
             

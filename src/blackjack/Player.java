@@ -137,7 +137,7 @@ public class Player implements User {
 
         }
 
-        System.out.println(player.getPlayerName() + " stands!");
+        System.out.println("*"+player.getPlayerName().toUpperCase() + " STANDS*");
         setPlayerFinished(true);
         return;
     }

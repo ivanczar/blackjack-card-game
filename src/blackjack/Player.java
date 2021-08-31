@@ -16,7 +16,7 @@ public class Player implements User {
     private int playerWins;
     private int playerLoss;
     private boolean playerFinished;
-    
+
     private double playerBet;
 
     public Player(String userName, double balance, int wins, int losses) {
@@ -69,8 +69,6 @@ public class Player implements User {
         this.playerLoss = playerLoss;
     }
 
-
-
     public boolean getPlayerFinished() {
         return playerFinished;
     }
@@ -79,12 +77,11 @@ public class Player implements User {
         this.playerFinished = playerFinished;
     }
 
-
-
-        @Override
+    @Override
     public int calcHandValue() {
         return this.getPlayerHand().getHandValue();
     }
+
     /**
      * If allowed, adds card to player hand. Also corrects for ACE being 11 or 1
      *
@@ -112,18 +109,22 @@ public class Player implements User {
      * @param player
      * @param myDeck
      * @return
-     * 
+     *
      */
     @Override
-    public void play(Dealer dealer, Player player, Deck myDeck) { 
+    public void play(Dealer dealer, Player player, Deck myDeck) {
         Scanner scan = new Scanner(System.in);
 
-        String choice = "o"; 
+        String choice = "o";
 
         // prompts user for action and catches invalid input
         while (!(choice.equalsIgnoreCase("H") || choice.equalsIgnoreCase("S"))) {
 //            
-
+            System.out.println("========================================");
+            System.out.println(player);
+            System.out.println("Dealer's hand: [" + dealer.getDealerHand().getHand().get(0) + ", HIDDEN]  (value: UNKNOWN)");
+            System.out.println("=======================================");
+            
             System.out.println("(H)it or (S)tand?: ");
             choice = scan.nextLine();
             if (choice.equalsIgnoreCase("Q")) {
@@ -140,42 +141,37 @@ public class Player implements User {
 
         }
 
-        while (!choice.equalsIgnoreCase("S")) {
+        while (!choice.equalsIgnoreCase("S") && player.calcHandValue() <= 21) {
 
-            if (player.calcHandValue() <= 21) {
+            player.hit(myDeck.deal()); //deal a card
 
-                player.hit(myDeck.deal()); //deal a card
+            System.out.println("========================================");
+            System.out.println(player);
+            System.out.println("Dealer's hand: [" + dealer.getDealerHand().getHand().get(0) + ", HIDDEN]  (value: UNKNOWN)");
+            System.out.println("=======================================");
 
-                System.out.println("========================================");
-                System.out.println(player);
-                System.out.println("Dealer's hand: [" + dealer.getDealerHand().getHand().get(0) + ", HIDDEN]  (value: UNKNOWN)");
-                System.out.println("=======================================");
+            if (player.calcHandValue() > 21) { // if player has bust
 
-                if (player.calcHandValue() > 21) { // if player has bust
-                    
-                    
-                    setPlayerFinished(true);
-                    
-                    return;
-                } else {
+                setPlayerFinished(true);
 
-                    choice = "o";
-                    while (!(choice.equalsIgnoreCase("H") || choice.equalsIgnoreCase("S"))) {
+                return;
+            } else {
 
-                        System.out.println("(H)it or (S)tand?: ");
-                        choice = scan.nextLine();
-                        if (choice.equalsIgnoreCase("Q")) {
-                            System.out.println("Exiting..");
-                            System.exit(0);
-                        }
-                        if ((!(choice.equalsIgnoreCase("H") || choice.equalsIgnoreCase("S")))) {
+                choice = "o";
+                while (!(choice.equalsIgnoreCase("H") || choice.equalsIgnoreCase("S"))) {
 
-                            System.out.println("Not an option,(H)it or (S)tand?: ");
-                            scan.next();
-                        } else {
-                            break;
-                        }
+                    System.out.println("(H)it or (S)tand?: ");
+                    choice = scan.nextLine();
+                    if (choice.equalsIgnoreCase("Q")) {
+                        System.out.println("Exiting..");
+                        System.exit(0);
+                    }
+                    if ((!(choice.equalsIgnoreCase("H") || choice.equalsIgnoreCase("S")))) {
 
+                        System.out.println("Not an option,(H)it or (S)tand?: ");
+                        scan.next();
+                    } else {
+                        break;
                     }
 
                 }

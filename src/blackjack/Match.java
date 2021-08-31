@@ -47,7 +47,7 @@ public class Match {
                 dealer.hit(myDeck.deal());
             }
 
-            printState(player, dealer);
+            
             checkBJ.checkBlackJack(player, dealer);
 
             // USER'S TURN   

@@ -5,7 +5,6 @@
  */
 package blackjack;
 
-
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -39,8 +38,6 @@ public class Bet {
     public void placeBet(Player player) throws InputMismatchException {
         Scanner scan = new Scanner(System.in);
 
-        
-        
         do {
             try {
                 String playerBet = "0";
@@ -50,27 +47,29 @@ public class Bet {
                 if (playerBet.equalsIgnoreCase("q")) {
                     System.out.println("Exiting...");
                     System.exit(0);
-                }
-                else{
-                    int numBet = Integer.parseInt(playerBet);
-                    player.setPlayerBalance(player.getPlayerBalance() - numBet); // removes bet amount from players balance
-                    if (numBet > player.getPlayerBalance())
-                    {
-                        
-                        System.out.println("Make sure bet is below your balance amount: ");
+                } else {
+                    double numBet = Double.parseDouble(playerBet);
+
+                    if (numBet > player.getPlayerBalance() || numBet < 0) {
+
+                        System.err.println("Make sure bet is above 0 and below your balance amount: ");
                         playerBet = scan.nextLine();
+                        if (playerBet.equalsIgnoreCase("q")) {
+                            System.out.println("Exiting...");
+                            System.exit(0);
+                        }
                     }
-                        
-                        setBetAmount(numBet);
-                        break;
+
+                    setBetAmount(numBet);
+                    player.setPlayerBalance(player.getPlayerBalance() - numBet); // removes bet amount from players balance
+                    break;
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Please try again");
+                System.err.println("Input must be numerical ");
+
             }
 
         } while (true);
-
-
 
     }
 
@@ -88,7 +87,7 @@ public class Bet {
                 player.setPlayerBalance(player.getPlayerBalance() + (this.getBetAmount()));
 
                 break;
-                
+
             case 2:
                 player.setPlayerBalance(player.getPlayerBalance() + ((this.getBetAmount() * 2)));
                 break;

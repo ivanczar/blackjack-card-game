@@ -13,6 +13,12 @@ import java.util.Scanner;
  */
 public class Prompt {
 
+    
+    /**
+     * prompts player for bet amount and handles exceptions
+     * @param player
+     * @return 
+     */
     public double betPrompt(Player player) {
 
         Scanner scan = new Scanner(System.in);
@@ -24,18 +30,18 @@ public class Prompt {
                 playerBet = scan.nextLine();
 
                 if (playerBet.equalsIgnoreCase("q")) {
-                    System.out.println("Exiting...");
+                    System.err.println("Exiting...");
                     System.exit(0);
                 } else {
 
-                    if (Double.valueOf(playerBet) > player.getPlayerBalance() || Double.valueOf(playerBet) < 0) {
+                    if (Double.valueOf(playerBet) > player.getPlayerBalance() || Double.valueOf(playerBet) <= 0) {
 
-                        System.out.println("Make sure bet is above 0 and below your balance amount: ");
+                        System.err.println("Make sure bet is above 0 and below your balance amount: ");
                         playerBet = scan.nextLine();
-//                        if (playerBet.equalsIgnoreCase("q")) {
-//                            System.out.println("Exiting...");
-//                            System.exit(0);
-//                        }
+                        if (playerBet.equalsIgnoreCase("q")) {
+                            System.err.println("Exiting...");
+                            System.exit(0);
+                        }
 
                     }
                     Double numBet = Double.parseDouble(playerBet);
@@ -43,7 +49,7 @@ public class Prompt {
 
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Input must be numerical ");
+                System.err.println("Input must be numerical ");
 
             }
 
@@ -51,6 +57,12 @@ public class Prompt {
 
     }
 
+    /**
+     * Prints player and dealer states during player's turn and hides dealer's second card
+     * @param player
+     * @param dealer
+     * @param myDeck 
+     */
     public void playerState(Player player, Dealer dealer, Deck myDeck) {
 
         System.out.println("========================================");
@@ -59,6 +71,22 @@ public class Prompt {
         System.out.println("=======================================");
     }
 
+    /**
+     * Prints player and dealer states
+     * @param player
+     * @param dealer 
+     */
+    public void printState(Player player, Dealer dealer) {
+        System.out.println("=================================================================");
+        System.out.println(player);
+        System.out.println(dealer);
+        System.out.println("=================================================================");
+    }
+
+    /**
+     * Prompts player to hit or stand. Handles exceptions
+     * @return 
+     */
     public int playerPlayPrompt() {
         Scanner scan = new Scanner(System.in);
         // prompts user for action and catches invalid input
@@ -69,16 +97,16 @@ public class Prompt {
                 choice = scan.nextLine();
 
                 if (choice.equalsIgnoreCase("q")) {
-                    System.out.println("Exiting...");
+                    System.err.println("Exiting...");
                     System.exit(0);
                 } else {
 
                     if (!((Integer.valueOf(choice) == 1) || (Integer.valueOf(choice) == 2))) {
 
-                        System.out.println("That is not an option!: ");
+                        System.err.println("That is not an option!: ");
                         choice = scan.nextLine();
                         if (choice.equalsIgnoreCase("q")) {
-                            System.out.println("Exiting...");
+                            System.err.println("Exiting...");
                             System.exit(0);
                         }
 
@@ -89,7 +117,7 @@ public class Prompt {
 
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Input must be numerical ");
+                System.err.println("Input must be numerical ");
 
             }
 

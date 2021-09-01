@@ -13,15 +13,17 @@ public class CheckBJ {
 
     // returns true if hand is blackjack (i.e handvalue ==true)
     public boolean isBlackJack(User user) {
-        if (user.calcHandValue() != 21) {
-            return false;
-        } else {
-            return true;
-        }
+        return user.calcHandValue() == 21;
     }
 
+    /**
+     * Checks if player gets natural blackjack (Ace & 10)
+     * @param player
+     * @param dealer 
+     */
     public void checkBlackJack(Player player, Dealer dealer) {
         // BLACKJACK CHECK
+        Prompt prompt = new Prompt();
         if (this.isBlackJack(player) && this.isBlackJack(dealer)) { // if both have blackjack
 
             System.out.println("Tie - Game Over");
@@ -30,12 +32,16 @@ public class CheckBJ {
 
         } else if (this.isBlackJack(player)) { // if player has blackjack
 
-            System.err.println("BlackJack, You Won!");
+            prompt.printState(player, dealer);
+
+            System.out.println("*" + player.getPlayerName().toUpperCase() + " BLACKJACK!*");
             player.setPlayerFinished(true);
 
         } else if (this.isBlackJack(dealer)) {
 
-            System.err.println("Whoops, house got blackjack");
+            prompt.printState(player, dealer);
+
+            System.out.println("*DEALER BLACKJACK!*");
             dealer.setDealerFinished(true);
 
         }

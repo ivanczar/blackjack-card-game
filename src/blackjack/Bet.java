@@ -6,7 +6,7 @@
 package blackjack;
 
 import java.util.InputMismatchException;
-import java.util.Scanner;
+
 
 /**
  *
@@ -28,10 +28,10 @@ public class Bet {
     }
 
     /**
-     * returns and prompts user for bet amount, deducts amount from balance and
+     * prompts user for bet amount, deducts amount from balance and
      * handles invalid input
      *
-     * @return
+     * @param player
      * @throws InputMismatchException
      */
     public void placeBet(Player player) throws InputMismatchException {
@@ -50,7 +50,7 @@ public class Bet {
      * @param player
      */
     public void settleBet(Player player) {
-        Dealer dealer = new Dealer();
+      
         CheckWinner end = new CheckWinner();
 
         switch (end.winner) {

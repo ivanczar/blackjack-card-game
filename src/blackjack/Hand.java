@@ -28,7 +28,7 @@ public class Hand {
     }
 
     public int getHandValue() {
-        Player player;
+        
         return handValue;
     }
 
@@ -49,21 +49,8 @@ public class Hand {
 
     }
 
-    // calculates and returns numerical value of hand
-    public int calcHandValue(User user) {
 
-        int count = 0;
-
-        for (Card c : getHand()) {
-
-            count += c.getValue().getCardValue(); // gets int value of enum
-
-        }
-        return count;
-        
-    }
-
-
+    @Override
     public String toString() {
         return getHand() + " (value: " + getHandValue() + ")";
     }

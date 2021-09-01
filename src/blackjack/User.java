@@ -9,7 +9,7 @@ package blackjack;
  *
  * @author Ivan
  */
-// NOTE TO SELF: Implementing classes must implement ALL of these methods
+
 public interface User {
 
     public void hit(Card card);

@@ -25,20 +25,20 @@ public class BJDriver {
                 + "Dealer will hit until their cards total 17 or higher.");
 
         Account acc = new Account();
-
+        String playerName;
         Scanner scan = new Scanner(System.in);
         System.out.println("You can enter 'q' at anytime to quit the game. WARNING: ONCE A BET IS PLACED IT WILL NOT BE RETURNED.");
         System.out.print("\nWelcome to BlackJack! Please enter your name "
                 + "(case sensitive) to access your account. Otherwise a new "
                 + "account under this name will be created for you: ");
 
-        String userName = scan.next();
-        if (userName.trim().equalsIgnoreCase("q")) {
-            System.out.println("Exiting...");
+        playerName = scan.next();
+        if (playerName.trim().equalsIgnoreCase("q")) {
+            System.err.println("Exiting...");
             System.exit(0);
         }
 
-        Player player = acc.checkPlayer(userName);
+        Player player = acc.checkPlayer(playerName);
         Match match = new Match(player);
         acc.updateBalance(player);
 

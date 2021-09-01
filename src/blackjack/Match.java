@@ -1,8 +1,5 @@
 package blackjack;
 
-import java.util.NoSuchElementException;
-import java.util.Scanner;
-
 /**
  *
  * @author ivanc
@@ -28,15 +25,18 @@ public class Match {
         this.begin(player);
     }
 
+    
+    /**
+     * Match logic
+     * @param player 
+     */
     public void begin(Player player) {
-
-        Scanner scan = new Scanner(System.in);
+        Prompt prompt = new Prompt();
 
         // Prints state of player and prompts user for a bet amount
         System.out.println("Welcome " + player.getPlayerName() + ", You have " + player.getPlayerWins() + " wins, " + player.getPlayerLoss()
                 + " losses and currently have a balance of $" + player.getPlayerBalance() + "\n");
 
-        // playerBet = player.placeBet(); // sets bet to value returned by placeBet()
         bet.placeBet(player);
 
         while (!(player.getPlayerFinished() || dealer.getDealerFinished())) {
@@ -47,35 +47,29 @@ public class Match {
                 dealer.hit(myDeck.deal());
             }
 
-            
             checkBJ.checkBlackJack(player, dealer);
 
             // USER'S TURN   
             if ((!(player.getPlayerFinished() || dealer.getDealerFinished()))) {
+
                 player.play(dealer, player, myDeck);
+
             }
 
-            if ((player.calcHandValue() < 21)) {//is player hasnt bust
-                printState(player, dealer);
-                // DEALERS TURN if player has stood/not bust
+            // DEALERS TURN if player has stood/not bust
+            if ((player.calcHandValue() < 21) && !dealer.getDealerFinished()) {//is player hasnt bust
+
+                prompt.printState(player, dealer);
+                
                 dealer.play(dealer, player, myDeck);
             }
 
         }
 
-        
         checkWinner.winCondition(player, dealer);
 
         bet.settleBet(player);
 
-    }
-
-    // break;
-    public void printState(Player player, Dealer dealer) {
-        System.out.println("=================================================================");
-        System.out.println(player);
-        System.out.println(dealer);
-        System.out.println("=================================================================");
     }
 
 }

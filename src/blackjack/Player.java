@@ -108,7 +108,6 @@ public class Player implements User {
      * @param dealer
      * @param player
      * @param myDeck
-     * @return
      *
      */
     @Override
@@ -121,6 +120,7 @@ public class Player implements User {
         int choice = prompt.playerPlayPrompt();
 
         while (choice != 2 && player.calcHandValue() <= 21) {
+            System.out.println("*"+ player.getPlayerName().toUpperCase() + " HIT!*");
             player.hit(myDeck.deal()); //deal a card
             prompt.playerState(player, dealer, myDeck);
 
@@ -131,15 +131,14 @@ public class Player implements User {
                 return;
             } else {
 
-                choice = prompt.playerPlayPrompt();;
+                choice = prompt.playerPlayPrompt();
 
             }
 
         }
 
-        System.out.println("*"+player.getPlayerName().toUpperCase() + " STANDS*");
+        System.out.println("*" + player.getPlayerName().toUpperCase() + " STANDS*");
         setPlayerFinished(true);
-        return;
     }
 
     @Override

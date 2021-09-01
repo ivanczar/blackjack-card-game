@@ -39,6 +39,7 @@ public final class Dealer implements User {
      *
      * @param card
      */
+    @Override
     public void hit(Card card) {
 
         if (this.calcHandValue() < 21) {
@@ -59,12 +60,12 @@ public final class Dealer implements User {
      * @param dealer
      * @param player
      * @param myDeck
-     * @return
      */
+    @Override
     public void play(Dealer dealer, Player player, Deck myDeck) {
         // DEALER TURN - CAN HIT IF HANDVALUE < 17   
 
-        // dealer only hits if allowed and is beneficial (i.e player has a higher handvalue than them)
+        // dealer only hits if allowed and is beneficial (eg player has a higher handvalue than them)
         while ((dealer.calcHandValue() < 17)
                 && (player.calcHandValue() > dealer.calcHandValue())){
 
@@ -74,13 +75,11 @@ public final class Dealer implements User {
             
 
         }
-        if (dealer.calcHandValue() > 21) {            
+        if (dealer.calcHandValue() > 21) {  //checks dealer bust          
             setDealerFinished(true);
-            return;
 
         }
 
-        return;
     }
 
     @Override

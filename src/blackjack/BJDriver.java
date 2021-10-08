@@ -39,7 +39,7 @@ public class BJDriver {
         }
 
         Player player = acc.checkPlayer(playerName);
-        Match match = new Match(player);
+        Model match = new Model(player);
         acc.updateBalance(player);
 
     }

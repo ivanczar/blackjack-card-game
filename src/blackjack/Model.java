@@ -1,10 +1,12 @@
 package blackjack;
 
+import java.util.Observable;
+
 /**
  *
  * @author ivanc
  */
-public class Match {
+public class Model extends Observable {
 
     final int DECKCAPACITY = 52;
     // double playerBet = 0;
@@ -15,7 +17,7 @@ public class Match {
     CheckBJ checkBJ;
     Bet bet;
 
-    public Match(Player player) {
+    public Model(Player player) {
         checkWinner = new CheckWinner();
         myDeck = new Deck(DECKCAPACITY);
         dealer = new Dealer();

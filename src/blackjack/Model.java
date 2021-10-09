@@ -36,8 +36,8 @@ public class Model extends Observable {
         Prompt prompt = new Prompt();
 
         // Prints state of player and prompts user for a bet amount
-        System.out.println("Welcome " + player.getPlayerName() + ", You have " + player.getPlayerWins() + " wins, " + player.getPlayerLoss()
-                + " losses and currently have a balance of $" + player.getPlayerBalance() + "\n");
+//        System.out.println("Welcome " + player.getPlayerName() + ", You have " + player.getPlayerWins() + " wins, " + player.getPlayerLoss()
+//                + " losses and currently have a balance of $" + player.getPlayerBalance() + "\n");
 
         bet.placeBet(player);
 

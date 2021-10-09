@@ -33,7 +33,7 @@ public class Database {
             String tableName = "PLAYERINFO";
 
             if (!exists(tableName)) {
-                statement.executeUpdate("CREATE TABLE " + tableName + " (username VARCHAR(12), password VARCHAR(12), balance DOUBLE)");
+                statement.executeUpdate("CREATE TABLE " + tableName + " (username VARCHAR(12), password VARCHAR(12), balance DOUBLE, wins INT, loss INT)");
             }
             //statement.executeUpdate("INSERT INTO " + tableName + " VALUES('Fiction',0),('Non-fiction',10),('Textbook',20)");
             statement.close();
@@ -45,7 +45,42 @@ public class Database {
     }
 
     //checkName method
-    
+    public Data checkName (String username, String password){
+        
+        Data data = new Data();
+      try{ 
+        Statement statement = conn.createStatement();
+        ResultSet rs = statement.executeQuery("SELECT username, password, balance, wins, loss FROM PLAYERINFO WHERE username = '" + username + "'");
+        
+        if (rs.next()){
+            String confirmed = rs.getString("password");  
+            
+            if (password.equals(confirmed)) //if passworad is correct, load values from database to Data object
+            {
+                data.balance = rs.getDouble("balance");
+                data.wins = rs.getInt("wins");
+                data.loss = rs.getInt("loss");
+                data.loginFlag = true; 
+            }
+            else
+                data.loginFlag = false;
+        }
+        else
+        {
+            // if username does not exist, create a new user in database with default values
+            System.out.println("No such user");
+            statement.executeUpdate("INSERT INTO PLAYERINFO VALUES ('" + username + "', '" + password + "' , 0 , 0 ,0");
+            data.balance = 0;
+            data.wins = 0;
+            data.loss = 0;
+            data.loginFlag = true;
+        }
+      }catch(SQLException ex)
+      {
+          Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+      }
+      return data; 
+    }
     
     
     

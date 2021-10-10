@@ -15,7 +15,9 @@ public class Player implements User {
     private Hand playerHand;
     private int playerWins;
     private int playerLoss;
-    private boolean playerFinished;
+    private boolean finishedFlag;
+    private boolean loginFlag;
+    private boolean quitFlag;
 
     private double playerBet;
 
@@ -27,6 +29,15 @@ public class Player implements User {
         setPlayerLoss(losses);
         setPlayerFinished(false);
 
+    }
+
+    public Player() {
+        setPlayerHand(new Hand());
+        setPlayerName(null);
+        setPlayerBalance(0);
+        setPlayerWins(0);
+        setPlayerLoss(0);
+        setPlayerFinished(false);
     }
 
     public Hand getPlayerHand() {
@@ -70,11 +81,27 @@ public class Player implements User {
     }
 
     public boolean getPlayerFinished() {
-        return playerFinished;
+        return finishedFlag;
     }
 
-    public void setPlayerFinished(boolean playerFinished) {
-        this.playerFinished = playerFinished;
+    public void setPlayerFinished(boolean finishedFlag) {
+        this.finishedFlag = finishedFlag;
+    }
+
+    public boolean isLoginFlag() {
+        return loginFlag;
+    }
+
+    public void setLoginFlag(boolean loginFlag) {
+        this.loginFlag = loginFlag;
+    }
+
+    public boolean isQuitFlag() {
+        return quitFlag;
+    }
+
+    public void setQuitFlag(boolean quitFlag) {
+        this.quitFlag = quitFlag;
     }
 
     @Override
@@ -120,7 +147,7 @@ public class Player implements User {
         int choice = prompt.playerPlayPrompt();
 
         while (choice != 2 && player.calcHandValue() <= 21) {
-            System.out.println("*"+ player.getPlayerName().toUpperCase() + " HIT!*");
+            System.out.println("*" + player.getPlayerName().toUpperCase() + " HIT!*");
             player.hit(myDeck.deal()); //deal a card
             prompt.playerState(player, dealer, myDeck);
 

@@ -15,6 +15,7 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Menu;
 import java.awt.Toolkit;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +44,7 @@ public class View extends JFrame implements Observer {
 
         public userPanel() {
 
-            super(new GridLayout());
+            super(new BorderLayout());
 
             try {
                 img = ImageIO.read(new File("./resources/images/background.jpg"));
@@ -66,11 +67,11 @@ public class View extends JFrame implements Observer {
     public JTextField unInput = new JTextField(10);
     public JTextField pwInput = new JTextField(10);
     private JLabel wrongName = new JLabel("Wrong username or passwork!");
-    private JButton loginButton = new JButton("Log in");
+    public JButton loginButton = new JButton("Log in");
 
-    private JPanel cardPanel = new JPanel();
+    private JPanel cardPanel = new JPanel(new BorderLayout());
 
-    private JPanel inputPanel = new JPanel();
+    private JPanel inputPanel = new JPanel(new BorderLayout());
     private JButton hit = new JButton("HIT");
     private JButton stand = new JButton("STAND");
     private JLabel balance = new JLabel("Balance: ");
@@ -79,7 +80,7 @@ public class View extends JFrame implements Observer {
     private JLabel betAmount = new JLabel("Bet Amount: ");
     public JTextField betField = new JTextField();
     public JButton betButton = new JButton("Place bet");
-
+    public JLabel message = new JLabel("");
     private boolean started = false;
 
     public View() {
@@ -94,13 +95,13 @@ public class View extends JFrame implements Observer {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 3;
-        c.insets = new Insets(0,10,0,10);  //top padding
+        c.insets = new Insets(0, 10, 0, 10);  //top padding
         this.userPanel.add(quit, c);
-        
+
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 2;
-        c.insets = new Insets(10,10,10,10);  //top padding
+        c.insets = new Insets(10, 10, 10, 10);  //top padding
         this.userPanel.add(loginButton, c);
 
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -127,19 +128,55 @@ public class View extends JFrame implements Observer {
         this.userPanel.add(pWord, c);
 
         this.add(userPanel);
-        pack();
+       // pack();
         this.setVisible(true);
 
     }
 
-    // @Override
-    public void update(Observable o, Object arg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void startGame() {
+        inputPanel.add(hit, BorderLayout.SOUTH);
+        inputPanel.add(stand);
+        inputPanel.add(balance);
+        inputPanel.add(reset, BorderLayout.NORTH);
+        inputPanel.add(quit, BorderLayout.NORTH);
+        inputPanel.add(betAmount);
+        inputPanel.add(betField);
+        inputPanel.add(betButton);
+        
+        
+        
+        
+
+        
+        this.getContentPane().removeAll();
+        inputPanel.setVisible(true);
+        this.add(inputPanel, BorderLayout.SOUTH);
+        this.add(cardPanel, BorderLayout.NORTH);
+        this.revalidate();
+        this.repaint();
+
     }
 
-    public static void main(String[] args) {
+    
+        public void addActionListener(ActionListener listener) {
+        this.loginButton.addActionListener(listener);
+//        this.nextButton.addActionListener(listener);
+//        this.quitButton.addActionListener(listener);
+    }
+    
+    
+    // @Override
+    public void update(Observable o, Object arg) {
+        Player player = (Player) arg;
+        if (!player.isLoginFlag()) {
+            this.unInput.setText("");
+            this.pwInput.setText("");
+            this.message.setText("Invalid username or password.");
+        } else if (!this.started) {
+            this.startGame();
+            this.started = true;
 
-        View view = new View();
+        }
     }
 
 }

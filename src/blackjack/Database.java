@@ -27,13 +27,16 @@ public class Database {
     String dbpassword = "pdc";   //your DB password
 
     public void dbsetup() {
+        System.out.println("Db setting up...");
         try {
             conn = DriverManager.getConnection(url, dbusername, dbpassword);
             Statement statement = conn.createStatement();
             String tableName = "PLAYERINFO";
-
+            
             if (!exists(tableName)) {
+                
                 statement.executeUpdate("CREATE TABLE " + tableName + " (username VARCHAR(12), password VARCHAR(12), balance DOUBLE, wins INT, loss INT)");
+                System.out.println("Table created!");
             }
             //statement.executeUpdate("INSERT INTO " + tableName + " VALUES('Fiction',0),('Non-fiction',10),('Textbook',20)");
             statement.close();
@@ -45,47 +48,45 @@ public class Database {
     }
 
     //checkName method
-    public Data checkName (String username, String password){
-        
-        Data data = new Data();
-      try{ 
-        Statement statement = conn.createStatement();
-        ResultSet rs = statement.executeQuery("SELECT username, password, balance, wins, loss FROM PLAYERINFO WHERE username = '" + username + "'");
-        
-        if (rs.next()){
-            String confirmed = rs.getString("password");  
+    public Player checkName(String username, String password) {
+
+        System.out.println("Checking name in db");
+        Player player = new Player();
+        try {
+            conn = DriverManager.getConnection(url, dbusername, dbpassword);
+            Statement statement = conn.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT password, balance, wins, loss FROM PLAYERINFO WHERE username = '" + username + "'");
             
-            if (password.equals(confirmed)) //if passworad is correct, load values from database to Data object
-            {
-                data.balance = rs.getDouble("balance");
-                data.wins = rs.getInt("wins");
-                data.loss = rs.getInt("loss");
-                data.loginFlag = true; 
+            if (rs.next()) {
+                String confirmed = rs.getString("password");
+
+                if (password.equals(confirmed)) //if passworad is correct, load values from database to Data object
+                {
+                    player.setPlayerName(username);
+                    player.setPlayerBalance(rs.getDouble("balance"));
+                    player.setPlayerWins(rs.getInt("wins"));
+                    player.setPlayerLoss(rs.getInt("loss"));
+                    player.setLoginFlag(true);
+                    // DO I SET PLAYER HAND HERE???????????????
+                } else {
+                    player.setLoginFlag(false);
+                }
+            } else {
+                // if username does not exist, create a new user in database with default values
+                System.out.println("No such user");
+                statement.executeUpdate("INSERT INTO PLAYERINFO VALUES('" + username + "', '" + password + "', 0 , 0 ,0)");
+                player.setPlayerName(username);
+                player.setPlayerBalance(0);
+                player.setPlayerWins(0);
+                player.setPlayerLoss(0);
+                player.setLoginFlag(true);
             }
-            else
-                data.loginFlag = false;
+        } catch (SQLException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
-        else
-        {
-            // if username does not exist, create a new user in database with default values
-            System.out.println("No such user");
-            statement.executeUpdate("INSERT INTO PLAYERINFO VALUES ('" + username + "', '" + password + "' , 0 , 0 ,0");
-            data.balance = 0;
-            data.wins = 0;
-            data.loss = 0;
-            data.loginFlag = true;
-        }
-      }catch(SQLException ex)
-      {
-          Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
-      }
-      return data; 
+        return player;
     }
-    
-    
-    
-    
-    
+
     //quitGame method
     public void quitGame(int score, String username) {
         Statement statement;
@@ -114,9 +115,4 @@ public class Database {
         return true;
     }
 
-    
-    public static void main(String[] args) {
-        Database db = new Database();
-        db.dbsetup();
-    }
 }

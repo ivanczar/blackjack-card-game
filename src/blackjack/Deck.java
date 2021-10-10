@@ -75,4 +75,11 @@ public class Deck {
         return getDeck() + " ";
     }
 
+//    public static void main(String[] args) {
+//        Deck d = new Deck(52);
+//        
+//        Card c = d.deal();
+//        System.out.println(c);
+//        System.out.println(c.getURL());
+//    }
 }

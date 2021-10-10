@@ -9,68 +9,91 @@ import java.util.Observable;
 public class Model extends Observable {
 
     final int DECKCAPACITY = 52;
-    // double playerBet = 0;
 
-    CheckWinner checkWinner;
-    Deck myDeck; // instantiates a deck object     
+    Deck myDeck; // instantiates a deck object  
+    Player player;
     Dealer dealer;
-    CheckBJ checkBJ;
     Bet bet;
+    CheckBJ checkBJ;
+    CheckWinner checkWinner;
 
-    public Model(Player player) {
+    Database db = new Database();
+
+    public Model() {
         checkWinner = new CheckWinner();
         myDeck = new Deck(DECKCAPACITY);
         dealer = new Dealer();
         checkBJ = new CheckBJ();
         bet = new Bet();
+        db.dbsetup();
 
-        this.begin(player);
+       
     }
 
-    
+  public void checkName(String playerName, String password)
+  {
+      
+      this.player = db.checkName(playerName, password);
+      
+      this.setChanged();
+      this.notifyObservers(this.player);
+      
+  }
+
     /**
      * Match logic
-     * @param player 
+     *
+     * @param player
      */
-    public void begin(Player player) {
-        Prompt prompt = new Prompt();
+    public void begin(String playerName, String password, Double betAmount) {
+
+        
+        //  Prompt prompt = new Prompt();
 
         // Prints state of player and prompts user for a bet amount
 //        System.out.println("Welcome " + player.getPlayerName() + ", You have " + player.getPlayerWins() + " wins, " + player.getPlayerLoss()
 //                + " losses and currently have a balance of $" + player.getPlayerBalance() + "\n");
+        if (player.isLoginFlag()) {
+            bet.placeBet(player, betAmount);
 
-        bet.placeBet(player);
+            while (!(player.getPlayerFinished() || dealer.getDealerFinished())) {
 
-        while (!(player.getPlayerFinished() || dealer.getDealerFinished())) {
+                // INITIAL DEAL of 2 cards p/player (dealer's second card ealth face down)
+                for (int i = 0; i < 2; i++) {
+                    player.hit(myDeck.deal());
+                    dealer.hit(myDeck.deal());
+                }
 
-            // INITIAL DEAL of 2 cards p/player (dealer's second card ealth face down)
-            for (int i = 0; i < 2; i++) {
-                player.hit(myDeck.deal());
-                dealer.hit(myDeck.deal());
-            }
+                checkBJ.checkBlackJack(player, dealer);
 
-            checkBJ.checkBlackJack(player, dealer);
-
-            // USER'S TURN   
-            if ((!(player.getPlayerFinished() || dealer.getDealerFinished()))) {
-
-                player.play(dealer, player, myDeck);
-
-            }
-
-            // DEALERS TURN if player has stood/not bust
-            if ((player.calcHandValue() < 21) && !dealer.getDealerFinished()) {//is player hasnt bust
-
-                prompt.printState(player, dealer);
                 
-                dealer.play(dealer, player, myDeck);
+                
+                
+                
+                
+                
+                
+                
+                // USER'S TURN   
+                if ((!(player.getPlayerFinished() || dealer.getDealerFinished()))) {
+
+                    player.play(dealer, player, myDeck);
+
+                }
+
+                // DEALERS TURN if player has stood/not bust
+                if ((player.calcHandValue() < 21) && !dealer.getDealerFinished()) {//is player hasnt bust
+
+                    //prompt.printState(player, dealer);
+                    dealer.play(dealer, player, myDeck);
+                }
+
             }
 
+            checkWinner.winCondition(player, dealer);
+
+            bet.settleBet(player);
         }
-
-        checkWinner.winCondition(player, dealer);
-
-        bet.settleBet(player);
 
     }
 

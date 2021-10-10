@@ -34,14 +34,14 @@ public class Bet {
      * @param player
      * @throws InputMismatchException
      */
-    public void placeBet(Player player) throws InputMismatchException {
+    public void placeBet(Player player, Double betAmount) throws InputMismatchException {
 
-        Prompt prompt = new Prompt();
+      //  Prompt prompt = new Prompt();
 
-        double numBet = prompt.betPrompt(player);
+       // double numBet = prompt.betPrompt(player);
 
-        setBetAmount(numBet);
-        player.setPlayerBalance(player.getPlayerBalance() - numBet); // removes bet amount from players balance
+        setBetAmount(betAmount);
+        player.setPlayerBalance(player.getPlayerBalance() - betAmount); // removes bet amount from players balance
     }
 
     /**

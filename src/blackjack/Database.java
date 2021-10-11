@@ -62,21 +62,23 @@ public class Database {
 
                 if (password.equals(confirmed)) //if passworad is correct, load values from database to Data object
                 {
+                    System.out.println("Match Found!");
                     player.setPlayerName(username);
                     player.setPlayerBalance(rs.getDouble("balance"));
                     player.setPlayerWins(rs.getInt("wins"));
                     player.setPlayerLoss(rs.getInt("loss"));
                     player.setLoginFlag(true);
                     // DO I SET PLAYER HAND HERE???????????????
+
                 } else {
                     player.setLoginFlag(false);
                 }
             } else {
                 // if username does not exist, create a new user in database with default values
                 System.out.println("No such user");
-                statement.executeUpdate("INSERT INTO PLAYERINFO VALUES('" + username + "', '" + password + "', 0 , 0 ,0)");
+                statement.executeUpdate("INSERT INTO PLAYERINFO VALUES('" + username + "', '" + password + "', 1000 , 0 ,0)");
                 player.setPlayerName(username);
-                player.setPlayerBalance(0);
+                player.setPlayerBalance(1000);
                 player.setPlayerWins(0);
                 player.setPlayerLoss(0);
                 player.setLoginFlag(true);

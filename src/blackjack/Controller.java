@@ -31,21 +31,27 @@ public class Controller implements ActionListener {
         switch (command) {
             case "Log in":
                 System.out.println("Login Pressed");
-                String username = this.view.unInput.getText();
-                String password = this.view.pwInput.getText();
+                String username = this.view.loginPanel.unInput.getText();
+                String password = this.view.loginPanel.pwInput.getText();
                 this.model.checkName(username, password);
-                
+
                 break;
-//            case "Quit":
-//                this.model.quitGame();
-//                break;
-//            case "Reset":
-//                this.model.resetGame();
-//                break;
-//            case "Place Bet":
-//                int bet = Integer.parseInt(this.view.betField.getText());
-//                this.model.placeBet(bet);
-//                break;
+            case "STAND":
+                this.model.playerStand();
+                break;
+            case "HIT":
+                this.model.playerHit();
+
+                break;
+            case "Place bet":
+                System.out.println("pressed place bet");
+                double bet = Double.parseDouble(this.view.betPanel.betField.getText());
+
+                this.model.placeBet(this.model.player, bet);
+
+                this.model.initialDeal();
+
+                break;
 //            
 
         }

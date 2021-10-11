@@ -38,145 +38,98 @@ import javax.swing.JTextField;
  */
 public class View extends JFrame implements Observer {
 
-    public class userPanel extends JPanel {
+    public LoginPanel loginPanel = new LoginPanel();
 
-        private BufferedImage img = null;
+    public JPanel cardPanel = new JPanel(new BorderLayout());
+    
+    public JPanel inputPanel = new JPanel(new BorderLayout());
+    public BetPanel betPanel = new BetPanel();
+    public RightPanel rightPanel = new RightPanel();
+    public HitStandPanel hitstand = new HitStandPanel();
 
-        public userPanel() {
-
-            super(new BorderLayout());
-
-            try {
-                img = ImageIO.read(new File("./resources/images/background.jpg"));
-            } catch (IOException ex) {
-                Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            g.drawImage(img, 0, 0, null);
-        }
-
-    }
-    private userPanel userPanel = new userPanel();
-    private JLabel uName = new JLabel("Username: ");
-    private JLabel pWord = new JLabel("Password: ");
-    public JTextField unInput = new JTextField(10);
-    public JTextField pwInput = new JTextField(10);
-    private JLabel wrongName = new JLabel("Wrong username or passwork!");
-    public JButton loginButton = new JButton("Log in");
-
-    private JPanel cardPanel = new JPanel(new BorderLayout());
-
-    private JPanel inputPanel = new JPanel(new BorderLayout());
-    private JButton hit = new JButton("HIT");
-    private JButton stand = new JButton("STAND");
-    private JLabel balance = new JLabel("Balance: ");
-    private JButton reset = new JButton("Reset");
-    private JButton quit = new JButton("Quit");
-    private JLabel betAmount = new JLabel("Bet Amount: ");
-    public JTextField betField = new JTextField();
-    public JButton betButton = new JButton("Place bet");
-    public JLabel message = new JLabel("");
+    
     private boolean started = false;
 
     public View() {
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(1280, 720);
-        this.userPanel.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
 
         this.setLocationRelativeTo(null);
 
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 1;
-        c.gridy = 3;
-        c.insets = new Insets(0, 10, 0, 10);  //top padding
-        this.userPanel.add(quit, c);
-
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 1;
-        c.gridy = 2;
-        c.insets = new Insets(10, 10, 10, 10);  //top padding
-        this.userPanel.add(loginButton, c);
-
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 1;
-        c.gridy = 1;
-        this.userPanel.add(unInput, c);
-
-        //this.userPanel.add(pwInput);
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 1;
-        c.gridy = 0;
-        this.userPanel.add(pwInput, c);
-
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 0;
-        uName.setForeground(Color.WHITE);
-        this.userPanel.add(uName, c);
-
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 1;
-        pWord.setForeground(Color.WHITE);
-        this.userPanel.add(pWord, c);
-
-        this.add(userPanel);
-       // pack();
+        this.add(loginPanel);
+        // pack();
         this.setVisible(true);
 
     }
 
     public void startGame() {
-        inputPanel.add(hit, BorderLayout.SOUTH);
-        inputPanel.add(stand);
-        inputPanel.add(balance);
-        inputPanel.add(reset, BorderLayout.NORTH);
-        inputPanel.add(quit, BorderLayout.NORTH);
-        inputPanel.add(betAmount);
-        inputPanel.add(betField);
-        inputPanel.add(betButton);
-        
-        
-        
-        
 
-        
+        inputPanel.add(betPanel, BorderLayout.WEST);
+        inputPanel.add(hitstand, BorderLayout.CENTER);
+        inputPanel.add(rightPanel, BorderLayout.EAST);
+
         this.getContentPane().removeAll();
-        inputPanel.setVisible(true);
+        this.setVisible(true);
         this.add(inputPanel, BorderLayout.SOUTH);
-        this.add(cardPanel, BorderLayout.NORTH);
+        this.add(cardPanel, BorderLayout.CENTER);
         this.revalidate();
         this.repaint();
 
     }
-
     
-        public void addActionListener(ActionListener listener) {
-        this.loginButton.addActionListener(listener);
+    
+    public void setBetLabel(Double betAmount)
+    {
+        this.betPanel.betAmount.setText("Bet Amount: $" + this.betPanel.betField.getText());
+        this.betPanel.betButton.setEnabled(false); // disables preventing user from placing bets during game
+        this.hitstand.hit.setEnabled(true); // enables user action after bet has been placed
+        this.hitstand.stand.setEnabled(true);
+        inputPanel.repaint();
+    }
+    
+    public void updateBalance(Player player)
+    {
+        String s = String.valueOf(player.getPlayerBalance());
+        this.hitstand.balance.setText(s);
+        inputPanel.repaint();
+    }
+
+    public void addActionListener(ActionListener listener) {
+        loginPanel.loginButton.addActionListener(listener);
+        betPanel.betButton.addActionListener(listener);
+        hitstand.hit.addActionListener(listener);
+        hitstand.stand.addActionListener(listener);
 //        this.nextButton.addActionListener(listener);
 //        this.quitButton.addActionListener(listener);
     }
-    
-    
+
     // @Override
     public void update(Observable o, Object arg) {
         Player player = (Player) arg;
         if (!player.isLoginFlag()) {
-            this.unInput.setText("");
-            this.pwInput.setText("");
-            this.message.setText("Invalid username or password.");
+            loginPanel.unInput.setText("");
+            loginPanel.pwInput.setText("");
+            
         } else if (!this.started) {
             this.startGame();
+            updateBalance(player);
             this.started = true;
 
+        }else if (!this.betPanel.betField.getText().equals(""))
+        {
+            setBetLabel(Double.parseDouble(this.betPanel.betField.getText()));
+            updateBalance(player);
         }
+        if (player.getPlayerFinished())
+        {
+            System.out.println("HIIIIIIIIII");
+            this.hitstand.hit.setEnabled(false); // enables user action after bet has been placed
+            this.hitstand.stand.setEnabled(false);
+        }
+        
+        System.out.println(player.getPlayerFinished());
+        
     }
 
 }

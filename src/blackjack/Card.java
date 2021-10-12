@@ -15,7 +15,7 @@ public class Card {
     public Card(Suit suit, Value value) {
         setSuit(suit);
         setValue(value);
-        setURL("./images/cards/" + value.toString().toLowerCase() + "_of_" + suit.toString().toLowerCase() + ".png");
+        setURL("./resources/images/cards/" + value.toString().toLowerCase() + "_of_" + suit.toString().toLowerCase() + ".png");
 
     }
 

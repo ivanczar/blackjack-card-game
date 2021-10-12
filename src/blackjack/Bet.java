@@ -49,17 +49,17 @@ public class Bet {
      *
      * @param player
      */
-    public void settleBet(Player player) {
+    public void settleBet(Player player, int winner) {
       
-        CheckWinner end = new CheckWinner();
+//        CheckWinner end = new CheckWinner();
 
-        switch (end.winner) {
+        switch (winner) { //end.getWinner()
             case 1: //if tie return bet
                 player.setPlayerBalance(player.getPlayerBalance() + (this.getBetAmount()));
 
                 break;
 
-            case 2:
+            case 2: // if blackjack
                 player.setPlayerBalance(player.getPlayerBalance() + ((this.getBetAmount() * 2)));
                 break;
 
@@ -68,6 +68,9 @@ public class Bet {
                 player.setPlayerBalance(player.getPlayerBalance() + (this.getBetAmount()));
                 player.setPlayerBalance(player.getPlayerBalance() + ((this.getBetAmount() * 1.5)));
 
+                break;
+            case(4):
+                System.out.println("Player lost, not pay out");
                 break;
 
         }

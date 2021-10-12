@@ -7,6 +7,7 @@ package blackjack;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -41,13 +42,14 @@ public class View extends JFrame implements Observer {
     public LoginPanel loginPanel = new LoginPanel();
 
     public JPanel cardPanel = new JPanel(new BorderLayout());
-    
+    public CardsPanel playerCards = new CardsPanel();
+    public CardsPanel dealerCards = new CardsPanel();
+
     public JPanel inputPanel = new JPanel(new BorderLayout());
     public BetPanel betPanel = new BetPanel();
     public RightPanel rightPanel = new RightPanel();
     public HitStandPanel hitstand = new HitStandPanel();
 
-    
     private boolean started = false;
 
     public View() {
@@ -69,6 +71,9 @@ public class View extends JFrame implements Observer {
         inputPanel.add(hitstand, BorderLayout.CENTER);
         inputPanel.add(rightPanel, BorderLayout.EAST);
 
+        cardPanel.add(playerCards, BorderLayout.SOUTH);
+        cardPanel.add(dealerCards, BorderLayout.NORTH);
+
         this.getContentPane().removeAll();
         this.setVisible(true);
         this.add(inputPanel, BorderLayout.SOUTH);
@@ -77,22 +82,52 @@ public class View extends JFrame implements Observer {
         this.repaint();
 
     }
-    
-    
-    public void setBetLabel(Double betAmount)
-    {
+
+    public void setBetLabel(Double betAmount) {
         this.betPanel.betAmount.setText("Bet Amount: $" + this.betPanel.betField.getText());
         this.betPanel.betButton.setEnabled(false); // disables preventing user from placing bets during game
         this.hitstand.hit.setEnabled(true); // enables user action after bet has been placed
         this.hitstand.stand.setEnabled(true);
         inputPanel.repaint();
     }
-    
-    public void updateBalance(Player player)
-    {
+
+    public void updateBalance(Player player) {
         String s = String.valueOf(player.getPlayerBalance());
         this.hitstand.balance.setText(s);
         inputPanel.repaint();
+    }
+
+    public void drawCards(Player player) {
+        int handSize = player.getPlayerHand().getHand().size();
+        System.out.println("SDize: " + handSize);
+        Card ca = null;
+        if (handSize == 2) { // draw initially dealt cards
+            for (Card c : player.getPlayerHand().getHand()) {
+
+                ImageIcon ii = new ImageIcon(c.getURL());
+                Image img = ii.getImage();
+                Image newimg = img.getScaledInstance(120, 120, java.awt.Image.SCALE_SMOOTH); // scale image 
+                ii = new ImageIcon(newimg);  // transform it back
+                JLabel card = new JLabel(ii);
+
+                playerCards.add(card);
+                dealerCards.add(new JLabel("HIIIII"));
+            }
+        } else { // after initial deal
+
+            ca = player.getPlayerHand().getHand().get(handSize - 1);
+
+            ImageIcon ii = new ImageIcon(ca.getURL());
+            Image img = ii.getImage();
+            Image newimg = img.getScaledInstance(120, 120, java.awt.Image.SCALE_SMOOTH); // scale image 
+            ii = new ImageIcon(newimg);  // transform it back
+            JLabel card = new JLabel(ii);
+
+            playerCards.add(card);
+
+        }
+        cardPanel.revalidate();
+        repaint();
     }
 
     public void addActionListener(ActionListener listener) {
@@ -107,29 +142,51 @@ public class View extends JFrame implements Observer {
     // @Override
     public void update(Observable o, Object arg) {
         Player player = (Player) arg;
+
+//        System.out.println("DEALER HAND TEST: " + dealer.getDealerHand().getHand());
         if (!player.isLoginFlag()) {
             loginPanel.unInput.setText("");
             loginPanel.pwInput.setText("");
-            
+
         } else if (!this.started) {
             this.startGame();
             updateBalance(player);
             this.started = true;
 
-        }else if (!this.betPanel.betField.getText().equals(""))
-        {
+        } else if (!this.betPanel.betField.getText().equals("")) {
             setBetLabel(Double.parseDouble(this.betPanel.betField.getText()));
             updateBalance(player);
         }
-        if (player.getPlayerFinished())
-        {
-            System.out.println("HIIIIIIIIII");
+        if (player.getPlayerFinished()) {
+
             this.hitstand.hit.setEnabled(false); // enables user action after bet has been placed
             this.hitstand.stand.setEnabled(false);
+
         }
-        
-        System.out.println(player.getPlayerFinished());
-        
+        if ((player.getPlayerHand().getHand().size() > 0) && (player.getPlayerFinished() == false)) { //draw if 
+            drawCards(player);
+        }
+
+    }
+
+    private static class CardsPanel extends JPanel {
+
+        JLabel valueLabel;
+
+        public CardsPanel() {
+            super(new GridLayout());
+
+            valueLabel = new JLabel("Value: ");
+            this.add(valueLabel, BorderLayout.EAST);
+        }
+//
+//        public void add(Card... cards) {
+//            for (Card c : cards) {
+//                ImageIcon ii = new ImageIcon(c.getURL());
+//                JLabel card = new JLabel(ii);
+//                this.add(card);
+//            }
+//        }
     }
 
 }

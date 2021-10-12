@@ -10,6 +10,7 @@ public final class Dealer implements User {
     // of inheritance but i need inheritance for marks
     private Hand dealerHand;
     private boolean dealerFinished;
+    private boolean hasWon;
 
     public Hand getDealerHand() {
         return dealerHand;
@@ -25,6 +26,14 @@ public final class Dealer implements User {
 
     public void setDealerFinished(boolean dealerFinished) {
         this.dealerFinished = dealerFinished;
+    }
+
+    public boolean isHasWon() {
+        return hasWon;
+    }
+
+    public void setHasWon(boolean hasWon) {
+        this.hasWon = hasWon;
     }
 
     public Dealer() {
@@ -67,12 +76,11 @@ public final class Dealer implements User {
 
         // dealer only hits if allowed and is beneficial (eg player has a higher handvalue than them)
         while ((dealer.calcHandValue() < 17)
-                && (player.calcHandValue() > dealer.calcHandValue())){
+                && (player.calcHandValue() > dealer.calcHandValue())) {
 
             System.out.println("*DEALER HITS*");
             this.hit(myDeck.deal());
             System.out.println(dealer);
-            
 
         }
         if (dealer.calcHandValue() > 21) {  //checks dealer bust          

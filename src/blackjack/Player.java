@@ -16,6 +16,7 @@ public class Player implements User {
     private int playerWins;
     private int playerLoss;
     private boolean finishedFlag;
+    private boolean hasWon;
     private boolean loginFlag;
     private boolean quitFlag;
 
@@ -107,6 +108,14 @@ public class Player implements User {
     @Override
     public int calcHandValue() {
         return this.getPlayerHand().getHandValue();
+    }
+
+    public boolean isHasWon() {
+        return hasWon;
+    }
+
+    public void setHasWon(boolean hasWon) {
+        this.hasWon = hasWon;
     }
 
     /**

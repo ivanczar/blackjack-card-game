@@ -41,6 +41,7 @@ public class Controller implements ActionListener {
                 break;
             case "HIT":
                 this.model.playerHit();
+                
 
                 break;
             case "Place bet":
@@ -50,6 +51,7 @@ public class Controller implements ActionListener {
                 this.model.placeBet(this.model.player, bet);
 
                 this.model.initialDeal();
+               
 
                 break;
 //            

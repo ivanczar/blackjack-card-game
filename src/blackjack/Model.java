@@ -19,6 +19,8 @@ public class Model extends Observable {
 
     Database db = new Database();
 
+    private int winner = 0;
+;
     public Model() {
         checkWinner = new CheckWinner();
         myDeck = new Deck(DECKCAPACITY);
@@ -64,16 +66,23 @@ public class Model extends Observable {
         System.out.println(dealer);
         System.out.println(player);
         checkBJ.checkBlackJack(player, dealer);
+        if (player.isHasWon() || dealer.isHasWon() == true) { //if anyone has blackjack 
+            checkWin();
+        }
         this.setChanged();
         this.notifyObservers(this.player);
     }
 
     public void playerHit() {
+        Card c = null;
         if (player.calcHandValue() <= 21) {
-            player.hit(myDeck.deal());
+            c = myDeck.deal();
+            player.hit(c);
+
         }
         if (player.calcHandValue() > 21) {
             player.setPlayerFinished(true);
+            dealerPlay();
         }
         System.out.println(dealer);
         System.out.println(player);
@@ -83,8 +92,61 @@ public class Model extends Observable {
 
     public void playerStand() {
         player.setPlayerFinished(true);
+        dealerPlay();
         this.setChanged();
         this.notifyObservers(this.player);
+    }
+
+    public void dealerPlay() {
+        if ((player.calcHandValue() < 21) && !dealer.getDealerFinished()) {
+            // DEALER TURN - CAN HIT IF HANDVALUE < 17   
+
+            // dealer only hits if allowed and is beneficial (eg player has a higher handvalue than them)
+            while ((dealer.calcHandValue() < 17)
+                    && (player.calcHandValue() > dealer.calcHandValue())) {
+
+                System.out.println("*DEALER HITS*");
+                dealer.hit(myDeck.deal());
+                System.out.println(dealer);
+
+            }
+            if (dealer.calcHandValue() > 21) {  //checks dealer bust          
+                dealer.setDealerFinished(true);
+
+            }
+        }
+
+        checkWin();
+
+        this.setChanged();
+        this.notifyObservers(this.player);
+
+    }
+
+    public void checkWin() {
+        checkWinner.winCondition(player, dealer);
+        this.winner = checkWinner.getWinner();
+
+        switch (winner) {
+            case (1):
+                System.out.println("1");
+                break;
+            case (2):
+                System.out.println("2");
+                break;
+            case (3):
+                System.out.println("3");
+                break;
+
+        }
+        setBet();
+    }
+
+    public void setBet() {
+
+        this.bet.settleBet(player, winner);
+//        this.setChanged();
+//        this.notifyObservers(this.player); // update balance label
     }
 
     /**
@@ -99,21 +161,7 @@ public class Model extends Observable {
 //        System.out.println("Welcome " + player.getPlayerName() + ", You have " + player.getPlayerWins() + " wins, " + player.getPlayerLoss()
 //                + " losses and currently have a balance of $" + player.getPlayerBalance() + "\n");
         // USER'S TURN   
-        if ((!(player.getPlayerFinished() || dealer.getDealerFinished()))) {
-
-            player.play(dealer, player, myDeck);
-
-        }
-
-        // DEALERS TURN if player has stood/not bust
-        if ((player.calcHandValue() < 21) && !dealer.getDealerFinished()) {//is player hasnt bust
-
-            //prompt.printState(player, dealer);
-            dealer.play(dealer, player, myDeck);
-        }
-        checkWinner.winCondition(player, dealer);
-
-        bet.settleBet(player);
+//        bet.settleBet(player);
     }
 
 }

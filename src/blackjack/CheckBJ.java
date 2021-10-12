@@ -27,22 +27,22 @@ public class CheckBJ {
         if (this.isBlackJack(player) && this.isBlackJack(dealer)) { // if both have blackjack
 
             System.out.println("Tie - Game Over");
-            dealer.setDealerFinished(true);
-            player.setPlayerFinished(true);
+            dealer.setHasWon(true);
+            player.setHasWon(true);
 
         } else if (this.isBlackJack(player)) { // if player has blackjack
 
             prompt.printState(player, dealer);
 
             System.out.println("*" + player.getPlayerName().toUpperCase() + " BLACKJACK!*");
-            player.setPlayerFinished(true);
+            player.setHasWon(true);
 
         } else if (this.isBlackJack(dealer)) {
 
             prompt.printState(player, dealer);
 
             System.out.println("*DEALER BLACKJACK!*");
-            dealer.setDealerFinished(true);
+            dealer.setHasWon(true);
 
         }
 

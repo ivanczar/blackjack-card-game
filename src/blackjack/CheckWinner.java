@@ -11,7 +11,15 @@ package blackjack;
  */
 public class CheckWinner {
 
-    static int winner = 0;
+    public static int getWinner() {
+        return winner;
+    }
+
+    public static void setWinner(int aWinner) {
+        winner = aWinner;
+    }
+
+    private static int winner = 0;
 
     /**
      * Determines who won and updates wins/losses
@@ -20,31 +28,34 @@ public class CheckWinner {
      * @param dealer
      */
     public void winCondition(Player player, Dealer dealer) {
+
         //Checks winning conditions
         if (player.calcHandValue() == 21 && player.getPlayerHand().getHand().size() == 2) // if player natural blackjack
         {
             player.setPlayerWins(player.getPlayerWins() + 1);
-            this.winner = 2;
+            this.setWinner(2);
         }
 
         if (player.calcHandValue() > 21) // if player busts
         {
-            System.out.println("*"+player.getPlayerName().toUpperCase() + " BUST!*");
+            System.out.println("*" + player.getPlayerName().toUpperCase() + " BUST!*");
             System.out.println("=======Dealer wins=========");
             player.setPlayerLoss(player.getPlayerLoss() + 1);
+            this.setWinner(4);
         }
         if (dealer.calcHandValue() > 21) // if dealer busts
         {
             System.out.println("*DEALER BUST!*");
-            System.out.println("======="+player.getPlayerName().toUpperCase() + " wins!========");
+            System.out.println("=======" + player.getPlayerName().toUpperCase() + " wins!========");
             player.setPlayerWins(player.getPlayerWins() + 1);
-            this.winner = 3;
+            this.setWinner(3);
         }
 
         if (dealer.getDealerHand().getHandValue() > player.getPlayerHand().getHandValue() && dealer.getDealerHand().getHandValue() <= 21) // dealer natural bj or higher hand value
         {
             System.out.println("\n======Dealer wins!======");
             player.setPlayerLoss(player.getPlayerLoss() + 1);
+            this.setWinner(4);
 
         }
         if (dealer.getDealerHand().getHandValue() < player.getPlayerHand().getHandValue() && player.getPlayerHand().getHandValue() <= 21)// player wins
@@ -53,13 +64,13 @@ public class CheckWinner {
 
             player.setPlayerWins(player.getPlayerWins() + 1);
 
-            this.winner = 3;
+            this.setWinner(3);
         }
         if (dealer.getDealerHand().getHandValue() == player.getPlayerHand().getHandValue()) // tie
         {
             System.out.println("\n======Tie!======");
 
-            this.winner = 1;
+            this.setWinner(1);
         }
 
     }

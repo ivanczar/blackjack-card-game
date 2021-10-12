@@ -18,9 +18,6 @@ public class Player implements User {
     private boolean finishedFlag;
     private boolean hasWon;
     private boolean loginFlag;
-    private boolean quitFlag;
-
-    private double playerBet;
 
     public Player(String userName, double balance, int wins, int losses) {
         setPlayerHand(new Hand());
@@ -28,6 +25,8 @@ public class Player implements User {
         setPlayerBalance(balance);
         setPlayerWins(wins);
         setPlayerLoss(losses);
+        setPlayerFinished(false);
+        setHasWon(false);
         setPlayerFinished(false);
 
     }
@@ -39,6 +38,7 @@ public class Player implements User {
         setPlayerWins(0);
         setPlayerLoss(0);
         setPlayerFinished(false);
+        setHasWon(false);
     }
 
     public Hand getPlayerHand() {
@@ -89,22 +89,6 @@ public class Player implements User {
         this.finishedFlag = finishedFlag;
     }
 
-    public boolean isLoginFlag() {
-        return loginFlag;
-    }
-
-    public void setLoginFlag(boolean loginFlag) {
-        this.loginFlag = loginFlag;
-    }
-
-    public boolean isQuitFlag() {
-        return quitFlag;
-    }
-
-    public void setQuitFlag(boolean quitFlag) {
-        this.quitFlag = quitFlag;
-    }
-
     @Override
     public int calcHandValue() {
         return this.getPlayerHand().getHandValue();
@@ -116,6 +100,14 @@ public class Player implements User {
 
     public void setHasWon(boolean hasWon) {
         this.hasWon = hasWon;
+    }
+
+    public boolean isLoginFlag() {
+        return loginFlag;
+    }
+
+    public void setLoginFlag(boolean loginFlag) {
+        this.loginFlag = loginFlag;
     }
 
     /**

@@ -11,8 +11,9 @@ public class Model extends Observable {
     final int DECKCAPACITY = 52;
 
     Deck myDeck; // instantiates a deck object  
-    Player player;
-    Dealer dealer;
+//    Player player;
+//    Dealer dealer;
+    Data data = new Data();
     Bet bet;
     CheckBJ checkBJ;
     CheckWinner checkWinner;
@@ -20,24 +21,26 @@ public class Model extends Observable {
     Database db = new Database();
 
     private int winner = 0;
-;
+
+    ;
     public Model() {
         checkWinner = new CheckWinner();
         myDeck = new Deck(DECKCAPACITY);
-        dealer = new Dealer();
+//        dealer = new Dealer();
         checkBJ = new CheckBJ();
         bet = new Bet();
         db.dbsetup();
+        data.dealer = new Dealer();
 
     }
 
     public void checkName(String playerName, String password) {
 
-        this.player = db.checkName(playerName, password);
+        this.data.player = db.checkName(playerName, password);
 
-        System.out.println(player.getPlayerBalance());
+        System.out.println(data.player.getPlayerBalance());
         this.setChanged();
-        this.notifyObservers(this.player);
+        this.notifyObservers(this.data);
 
     }
 
@@ -47,71 +50,73 @@ public class Model extends Observable {
         this.bet.placeBet(player, betAmount);
 
         this.setChanged();
-        this.notifyObservers(this.player);
+        this.notifyObservers(this.data);
 //        }
 
     }
 
     public void initialDeal() {
         System.out.println("Dealing initial caRds...");
+        System.out.println("INTIAL WINS : " + data.player.getPlayerWins());
+        System.out.println("INTIAL Loss : " + data.player.getPlayerLoss());
 
-        if (!(player.getPlayerFinished() || dealer.getDealerFinished())) {
+        if (!(data.player.getPlayerFinished() || data.dealer.getDealerFinished())) {
 
             // INITIAL DEAL of 2 cards p/player (dealer's second card ealth face down)
             for (int i = 0; i < 2; i++) {
-                player.hit(myDeck.deal());
-                dealer.hit(myDeck.deal());
+                data.player.hit(myDeck.deal());
+                data.dealer.hit(myDeck.deal());
             }
         }
-        System.out.println(dealer);
-        System.out.println(player);
-        checkBJ.checkBlackJack(player, dealer);
-        if (player.isHasWon() || dealer.isHasWon() == true) { //if anyone has blackjack 
+        System.out.println(data.dealer);
+        System.out.println(data.player);
+        checkBJ.checkBlackJack(data.player, data.dealer);
+        if (data.player.isHasWon() || data.dealer.isHasWon() == true) { //if anyone has blackjack 
             checkWin();
         }
         this.setChanged();
-        this.notifyObservers(this.player);
+        this.notifyObservers(this.data);
     }
 
     public void playerHit() {
         Card c = null;
-        if (player.calcHandValue() <= 21) {
+        if (data.player.calcHandValue() <= 21) {
             c = myDeck.deal();
-            player.hit(c);
+            data.player.hit(c);
 
         }
-        if (player.calcHandValue() > 21) {
-            player.setPlayerFinished(true);
+        if (data.player.calcHandValue() > 21) {
+            data.player.setPlayerFinished(true);
             dealerPlay();
         }
-        System.out.println(dealer);
-        System.out.println(player);
+        System.out.println(data.dealer);
+        System.out.println(data.player);
         this.setChanged();
-        this.notifyObservers(this.player);
+        this.notifyObservers(this.data);
     }
 
     public void playerStand() {
-        player.setPlayerFinished(true);
+        data.player.setPlayerFinished(true);
         dealerPlay();
         this.setChanged();
-        this.notifyObservers(this.player);
+        this.notifyObservers(this.data);
     }
 
     public void dealerPlay() {
-        if ((player.calcHandValue() < 21) && !dealer.getDealerFinished()) {
+        if ((data.player.calcHandValue() < 21) && !data.dealer.getDealerFinished()) {
             // DEALER TURN - CAN HIT IF HANDVALUE < 17   
 
             // dealer only hits if allowed and is beneficial (eg player has a higher handvalue than them)
-            while ((dealer.calcHandValue() < 17)
-                    && (player.calcHandValue() > dealer.calcHandValue())) {
+            while ((data.dealer.calcHandValue() < 17)
+                    && (data.player.calcHandValue() > data.dealer.calcHandValue())) {
 
                 System.out.println("*DEALER HITS*");
-                dealer.hit(myDeck.deal());
-                System.out.println(dealer);
+                data.dealer.hit(myDeck.deal());
+                System.out.println(data.dealer);
 
             }
-            if (dealer.calcHandValue() > 21) {  //checks dealer bust          
-                dealer.setDealerFinished(true);
+            if (data.dealer.calcHandValue() > 21) {  //checks dealer bust          
+                data.dealer.setDealerFinished(true);
 
             }
         }
@@ -119,12 +124,12 @@ public class Model extends Observable {
         checkWin();
 
         this.setChanged();
-        this.notifyObservers(this.player);
+        this.notifyObservers(this.data);
 
     }
 
     public void checkWin() {
-        checkWinner.winCondition(player, dealer);
+        checkWinner.winCondition(data.player, data.dealer);
         this.winner = checkWinner.getWinner();
 
         switch (winner) {
@@ -140,13 +145,29 @@ public class Model extends Observable {
 
         }
         setBet();
+//        quitGame();
+        this.setChanged();
+        this.notifyObservers(this.data);
     }
 
     public void setBet() {
 
-        this.bet.settleBet(player, winner);
-//        this.setChanged();
-//        this.notifyObservers(this.player); // update balance label
+        this.bet.settleBet(data.player, winner);
+        this.setChanged();
+        this.notifyObservers(this.data); // update balance label
+    }
+
+    public void quitGame() {
+        /**
+         * Update data in the database. Go to quitGame() of Database.java for a
+         * fast check.
+         */
+        this.db.quitGame(data.player.getPlayerName(), data.player.getPlayerBalance(), data.player.getPlayerWins(), data.player.getPlayerLoss());
+        this.data.quitFlag = true; // Mark quitFlag as false.
+        this.setChanged();
+        this.notifyObservers(this.data);
+        System.out.println("FINAL WINS : " + data.player.getPlayerWins());
+        System.out.println("FINAL Loss : " + data.player.getPlayerLoss());
     }
 
     /**

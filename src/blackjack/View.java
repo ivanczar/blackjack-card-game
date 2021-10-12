@@ -97,7 +97,7 @@ public class View extends JFrame implements Observer {
         inputPanel.repaint();
     }
 
-    public void drawCards(Player player) {
+    public void drawCards(Player player, Dealer dealer) {
         int handSize = player.getPlayerHand().getHand().size();
         System.out.println("SDize: " + handSize);
         Card ca = null;
@@ -106,12 +106,12 @@ public class View extends JFrame implements Observer {
 
                 ImageIcon ii = new ImageIcon(c.getURL());
                 Image img = ii.getImage();
-                Image newimg = img.getScaledInstance(120, 120, java.awt.Image.SCALE_SMOOTH); // scale image 
+                Image newimg = img.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
                 ii = new ImageIcon(newimg);  // transform it back
                 JLabel card = new JLabel(ii);
 
                 playerCards.add(card);
-                dealerCards.add(new JLabel("HIIIII"));
+
             }
         } else { // after initial deal
 
@@ -119,15 +119,59 @@ public class View extends JFrame implements Observer {
 
             ImageIcon ii = new ImageIcon(ca.getURL());
             Image img = ii.getImage();
-            Image newimg = img.getScaledInstance(120, 120, java.awt.Image.SCALE_SMOOTH); // scale image 
+            Image newimg = img.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
             ii = new ImageIcon(newimg);  // transform it back
             JLabel card = new JLabel(ii);
 
             playerCards.add(card);
 
         }
+        int dealerHandSize = dealer.getDealerHand().getHand().size();
+        System.out.println("SDize: " + handSize);
+        Card dCa = null;
+        if (handSize == 2) { // draw initially dealt cards
+            for (Card c : dealer.getDealerHand().getHand()) {
+
+                ImageIcon ii = new ImageIcon(c.getURL());
+                Image img = ii.getImage();
+                Image newimg = img.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
+                ii = new ImageIcon(newimg);  // transform it back
+                JLabel card = new JLabel(ii);
+
+                dealerCards.add(card);
+
+            }
+        } else { // after initial deal
+
+            ca = dealer.getDealerHand().getHand().get(handSize - 1);
+
+            ImageIcon ii = new ImageIcon(ca.getURL());
+            Image img = ii.getImage();
+            Image newimg = img.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
+            ii = new ImageIcon(newimg);  // transform it back
+            JLabel card = new JLabel(ii);
+
+            dealerCards.add(card);
+
+        }
+        playerCards.valueLabel.setText(player.getPlayerName() + "'s Value: " + String.valueOf(player.getPlayerHand().getHandValue()));
+        dealerCards.valueLabel.setText("Dealer's Value : " + String.valueOf(dealer.getDealerHand().getHandValue()));
         cardPanel.revalidate();
         repaint();
+    }
+
+    private void quitGame(Player player) {
+
+        JPanel quitPanel = new JPanel();
+        JLabel scoreLabel = new JLabel("Your balance: " + player.getPlayerBalance());
+        JLabel ratioLabel = new JLabel("You have " + player.getPlayerWins() + " wins and " + player.getPlayerLoss() + " losses");
+        quitPanel.add(scoreLabel);
+        quitPanel.add(ratioLabel);
+        this.getContentPane().removeAll();
+        //calcPanel.setVisible(true);
+        this.add(quitPanel);
+        this.revalidate();
+        this.repaint();
     }
 
     public void addActionListener(ActionListener listener) {
@@ -136,37 +180,41 @@ public class View extends JFrame implements Observer {
         hitstand.hit.addActionListener(listener);
         hitstand.stand.addActionListener(listener);
 //        this.nextButton.addActionListener(listener);
-//        this.quitButton.addActionListener(listener);
+//        rightPanel.quitButton.addActionListener(listener);
+        rightPanel.quit.addActionListener(listener);
     }
 
     // @Override
     public void update(Observable o, Object arg) {
-        Player player = (Player) arg;
+        Data data = (Data) arg;
 
 //        System.out.println("DEALER HAND TEST: " + dealer.getDealerHand().getHand());
-        if (!player.isLoginFlag()) {
+        if (!data.player.isLoginFlag()) {
             loginPanel.unInput.setText("");
             loginPanel.pwInput.setText("");
 
         } else if (!this.started) {
             this.startGame();
-            updateBalance(player);
+            updateBalance(data.player);
             this.started = true;
 
         } else if (!this.betPanel.betField.getText().equals("")) {
             setBetLabel(Double.parseDouble(this.betPanel.betField.getText()));
-            updateBalance(player);
+            updateBalance(data.player);
         }
-        if (player.getPlayerFinished()) {
+        if (data.player.getPlayerFinished()) {
 
             this.hitstand.hit.setEnabled(false); // enables user action after bet has been placed
             this.hitstand.stand.setEnabled(false);
 
         }
-        if ((player.getPlayerHand().getHand().size() > 0) && (player.getPlayerFinished() == false)) { //draw if 
-            drawCards(player);
+        if ((data.player.getPlayerHand().getHand().size() > 0) && (data.player.getPlayerFinished() == false)) { //draw if 
+            drawCards(data.player, data.dealer);
         }
+        if (data.quitFlag == true) {
+            this.quitGame(data.player);
 
+        }
     }
 
     private static class CardsPanel extends JPanel {
@@ -179,14 +227,7 @@ public class View extends JFrame implements Observer {
             valueLabel = new JLabel("Value: ");
             this.add(valueLabel, BorderLayout.EAST);
         }
-//
-//        public void add(Card... cards) {
-//            for (Card c : cards) {
-//                ImageIcon ii = new ImageIcon(c.getURL());
-//                JLabel card = new JLabel(ii);
-//                this.add(card);
-//            }
-//        }
+
     }
 
 }

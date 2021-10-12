@@ -32,9 +32,9 @@ public class Database {
             conn = DriverManager.getConnection(url, dbusername, dbpassword);
             Statement statement = conn.createStatement();
             String tableName = "PLAYERINFO";
-            
+
             if (!exists(tableName)) {
-                
+
                 statement.executeUpdate("CREATE TABLE " + tableName + " (username VARCHAR(12), password VARCHAR(12), balance DOUBLE, wins INT, loss INT)");
                 System.out.println("Table created!");
             }
@@ -56,7 +56,7 @@ public class Database {
             conn = DriverManager.getConnection(url, dbusername, dbpassword);
             Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery("SELECT password, balance, wins, loss FROM PLAYERINFO WHERE username = '" + username + "'");
-            
+
             if (rs.next()) {
                 String confirmed = rs.getString("password");
 
@@ -89,18 +89,6 @@ public class Database {
         return player;
     }
 
-    //quitGame method
-    public void quitGame(int score, String username) {
-        Statement statement;
-        try {
-            statement = conn.createStatement();
-            statement.executeUpdate("UPDATE UserInfo SET score=" + score + " WHERE userid='" + username + "'");
-
-        } catch (SQLException ex) {
-            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
 
     public boolean exists(String tableName) {
         try {
@@ -117,4 +105,17 @@ public class Database {
         return true;
     }
 
+    
+    
+        public void quitGame(String username, double balance, int wins, int loss ) {
+        Statement statement;
+        try {
+            statement = conn.createStatement();
+            statement.executeUpdate("UPDATE PLAYERINFO SET balance=" + balance + ", wins=" + wins + ", loss=" + loss + " WHERE username='" + username + "'");
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 }

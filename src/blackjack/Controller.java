@@ -41,19 +41,19 @@ public class Controller implements ActionListener {
                 break;
             case "HIT":
                 this.model.playerHit();
-                
 
                 break;
             case "Place bet":
                 System.out.println("pressed place bet");
                 double bet = Double.parseDouble(this.view.betPanel.betField.getText());
 
-                this.model.placeBet(this.model.player, bet);
+                this.model.placeBet(this.model.data.player, bet);
 
                 this.model.initialDeal();
-               
 
                 break;
+            case "Quit":
+                this.model.quitGame();
 //            
 
         }

@@ -85,7 +85,7 @@ public class Model extends Observable {
             data.player.isBust = true;
             this.setChanged();
             this.notifyObservers(this.data);
-            playerStand();
+            checkWin();
 
         }
         System.out.println(data.dealer);
@@ -101,6 +101,7 @@ public class Model extends Observable {
         if (data.player.isBust == false) { // dealer plays only if player has stood (not bust)
             dealerPlay();
         }
+        
         this.setChanged();
         this.notifyObservers(this.data);
     }
@@ -187,6 +188,7 @@ public class Model extends Observable {
         data.resetFlag = true;
         data.winner = 0;
         data.player.setHasWon(false);
+        data.player.isBust = false;
 
         data.dealer = new Dealer();
         checkBJ = new CheckBJ();

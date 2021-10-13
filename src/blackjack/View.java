@@ -92,13 +92,15 @@ public class View extends JFrame implements Observer {
         this.betPanel.betButton.setEnabled(false); // disables preventing user from placing bets during game
         this.hitstand.hit.setEnabled(true); // enables user action after bet has been placed
         this.hitstand.stand.setEnabled(true);
-        inputPanel.repaint();
+        this.revalidate();
+        this.repaint();
     }
 
     public void updateBalance(Player player) {
         String s = String.valueOf(player.getPlayerBalance());
         this.hitstand.balance.setText("Balance: $" + s);
-        inputPanel.repaint();
+        this.revalidate();
+        this.repaint();
     }
 
     public void drawPlayerCards(Player player) {
@@ -119,23 +121,24 @@ public class View extends JFrame implements Observer {
 
             }
         } else { // after initial deal
+//            if (player.isBust == false) { WONT DRAW FINAL CARD
+                ca = player.getPlayerHand().getHand().get(playerHandSize - 1);
 
-            ca = player.getPlayerHand().getHand().get(playerHandSize - 1);
+                ImageIcon ii = new ImageIcon(ca.getURL());
+                Image img = ii.getImage();
+                Image newimg = img.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
+                ii = new ImageIcon(newimg);  // transform it back
+                JLabel card = new JLabel(ii);
 
-            ImageIcon ii = new ImageIcon(ca.getURL());
-            Image img = ii.getImage();
-            Image newimg = img.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
-            ii = new ImageIcon(newimg);  // transform it back
-            JLabel card = new JLabel(ii);
+                playerCards.add(card);
 
-            playerCards.add(card);
-
+//            }
         }
 
         playerCards.valueLabel.setText(player.getPlayerName() + "'s Value: " + String.valueOf(player.getPlayerHand().getHandValue()));
 
-        cardPanel.revalidate();
-        repaint();
+        this.revalidate();
+        this.repaint();
     }
 
     public void resetGame() {
@@ -149,8 +152,8 @@ public class View extends JFrame implements Observer {
         this.hasWinner = false;
         betPanel.betField.setText("");
         betPanel.betAmount.setText("Bet Amount:");
+//        this.started = false;
 
-        
         startGame();
     }
 
@@ -159,32 +162,31 @@ public class View extends JFrame implements Observer {
         int dealerHandSize = dealer.getDealerHand().getHand().size();
 //        System.out.println("dealer hand size: " + dealerHandSize);
         Card dCa = null;
-        
+
         if (dealerHandSize == 2 && player.getPlayerHand().getHand().size() == 2) { // draw initially dealt cards
 //            for (Card c : dealer.getDealerHand().getHand()) {
-String firstCardURL = dealer.getDealerHand().getHand().get(0).getURL();
-                ImageIcon ii = new ImageIcon(firstCardURL);
-                Image img = ii.getImage();
-                Image newimg = img.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
-                ii = new ImageIcon(newimg);  // transform it back
-                JLabel card = new JLabel(ii);
+            String firstCardURL = dealer.getDealerHand().getHand().get(0).getURL();
+            ImageIcon ii = new ImageIcon(firstCardURL);
+            Image img = ii.getImage();
+            Image newimg = img.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
+            ii = new ImageIcon(newimg);  // transform it back
+            JLabel card = new JLabel(ii);
 
-                ImageIcon jj = new ImageIcon("./resources/images/cards/back.png");
-                Image img2 = jj.getImage();
-                Image newimg2 = img2.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
-                jj = new ImageIcon(newimg2);  // transform it back
-                backCard = new JLabel(jj);
-                
-                dealerCards.add(card);
-                dealerCards.add(backCard);
-                
-                dealerCards.valueLabel.setText("Dealer's Value : " + String.valueOf(dealer.getDealerHand().getHand().get(0).getValue().getCardValue()));
-                
+            ImageIcon jj = new ImageIcon("./resources/images/cards/back.png");
+            Image img2 = jj.getImage();
+            Image newimg2 = img2.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
+            jj = new ImageIcon(newimg2);  // transform it back
+            backCard = new JLabel(jj);
+
+            dealerCards.add(card);
+            dealerCards.add(backCard);
+
+            dealerCards.valueLabel.setText("Dealer's Value : " + String.valueOf(dealer.getDealerHand().getHand().get(0).getValue().getCardValue()));
 
 //            }
         } else { // after initial deal
-            if (player.getPlayerFinished() == true) { // dealers card drawn only after player finishes playing
-                
+            if (player.getPlayerFinished() == true && player.isBust == false) { // dealers card drawn only after player finishes playing
+
                 dealerCards.remove(backCard);
                 String secondCardURL = dealer.getDealerHand().getHand().get(1).getURL();
                 ImageIcon jj = new ImageIcon(secondCardURL);
@@ -193,7 +195,7 @@ String firstCardURL = dealer.getDealerHand().getHand().get(0).getURL();
                 jj = new ImageIcon(newimg2);  // transform it back
                 JLabel secondCard = new JLabel(jj);
                 dealerCards.add(secondCard);
-                
+
                 dCa = dealer.getDealerHand().getHand().get(dealerHandSize - 1);
 
                 ImageIcon ii = new ImageIcon(dCa.getURL());
@@ -206,9 +208,9 @@ String firstCardURL = dealer.getDealerHand().getHand().get(0).getURL();
             }
             dealerCards.valueLabel.setText("Dealer's Value : " + String.valueOf(dealer.getDealerHand().getHandValue()));
         }
-        
-        cardPanel.revalidate();
-        repaint();
+
+        this.revalidate();
+        this.repaint();
     }
 
     private void quitGame(Player player) {
@@ -288,7 +290,7 @@ String firstCardURL = dealer.getDealerHand().getHand().get(0).getURL();
             drawPlayerCards(data.player);
         }
 
-        if (data.dealer.getDealerHand().getHand().size() > 0 && data.dealer.getDealerFinished() == false ) {
+        if (data.dealer.getDealerHand().getHand().size() > 0 && data.dealer.getDealerFinished() == false) {
             drawDealerCards(data.player, data.dealer);
         }
         if (data.quitFlag == true) {

@@ -19,8 +19,7 @@ public class Model extends Observable {
     CheckWinner checkWinner;
 
     Database db = new Database();
-    
-    
+
     public Model() {
         checkWinner = new CheckWinner();
         myDeck = new Deck(DECKCAPACITY);
@@ -83,6 +82,7 @@ public class Model extends Observable {
         }
         if (data.player.calcHandValue() >= 21) {
             data.player.setPlayerFinished(true);
+            data.player.isBust = true;
             this.setChanged();
             this.notifyObservers(this.data);
             playerStand();
@@ -98,7 +98,9 @@ public class Model extends Observable {
     public void playerStand() {
         data.player.setPlayerFinished(true);
         data.player.hasStand = true;
-        dealerPlay();
+        if (data.player.isBust == false) { // dealer plays only if player has stood (not bust)
+            dealerPlay();
+        }
         this.setChanged();
         this.notifyObservers(this.data);
     }
@@ -113,6 +115,8 @@ public class Model extends Observable {
 
                 System.out.println("*DEALER HITS*");
                 data.dealer.hit(myDeck.deal());
+                this.setChanged();
+                this.notifyObservers(this.data);
                 System.out.println(data.dealer);
 
             }
@@ -166,7 +170,6 @@ public class Model extends Observable {
 
         this.db.quitGame(data.player.getPlayerName(), data.player.getPlayerBalance(), data.player.getPlayerWins(), data.player.getPlayerLoss());
         this.data.quitFlag = true; // Mark quitFlag as false.
-        
 
         this.setChanged();
         this.notifyObservers(this.data);
@@ -187,9 +190,10 @@ public class Model extends Observable {
 
         data.dealer = new Dealer();
         checkBJ = new CheckBJ();
+        bet = new Bet();
         checkWinner = new CheckWinner();
 
-        bet = new Bet();
+        
 
         this.setChanged();
         this.notifyObservers(this.data); // update balance label

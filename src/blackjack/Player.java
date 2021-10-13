@@ -18,7 +18,8 @@ public class Player implements User {
     private boolean finishedFlag;
     private boolean hasWon;
     private boolean loginFlag;
-    public boolean hasStand = false;
+    public boolean hasStand;
+    public boolean isBust;
 
     public Player(String userName, double balance, int wins, int losses) {
         setPlayerHand(new Hand());
@@ -29,7 +30,8 @@ public class Player implements User {
         setPlayerFinished(false);
         setHasWon(false);
         setPlayerFinished(false);
-        
+        hasStand = false;
+        isBust = false;
 
     }
 

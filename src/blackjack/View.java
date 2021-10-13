@@ -139,12 +139,15 @@ public class View extends JFrame implements Observer {
 
     public void resetGame() {
         super.getContentPane().removeAll();
-        cardPanel = new JPanel();
+        cardPanel = new JPanel(new BorderLayout());
         playerCards = new CardsPanel();
         dealerCards = new CardsPanel();
+
         hitstand.hit.setEnabled(false);
         hitstand.stand.setEnabled(false);
         this.hasWinner = false;
+        betPanel.betField.setText("");
+        betPanel.betAmount.setText("Bet Amount:");
         
         startGame();
     }

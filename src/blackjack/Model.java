@@ -121,10 +121,9 @@ public class Model extends Observable {
             }
         }
 
-        checkWin();
-
         this.setChanged();
         this.notifyObservers(this.data);
+        checkWin();
 
     }
 
@@ -170,19 +169,18 @@ public class Model extends Observable {
         System.out.println("FINAL Loss : " + data.player.getPlayerLoss());
     }
 
-    /**
-     * Match logic
-     *
-     * @param player
-     */
-    public void begin(String playerName, String password) {
+    public void resetGame() {
 
-        //  Prompt prompt = new Prompt();
-        // Prints state of player and prompts user for a bet amount
-//        System.out.println("Welcome " + player.getPlayerName() + ", You have " + player.getPlayerWins() + " wins, " + player.getPlayerLoss()
-//                + " losses and currently have a balance of $" + player.getPlayerBalance() + "\n");
-        // USER'S TURN   
-//        bet.settleBet(player);
+        bet = new Bet();
+        myDeck = new Deck(DECKCAPACITY);
+        checkBJ = new CheckBJ();
+        checkWinner = new CheckWinner();
+        data.player.setPlayerHand(new Hand());
+        data.player.setHasWon(false);
+        data.player.setPlayerFinished(false);
+
+        data.dealer = new Dealer();
+
     }
 
 }

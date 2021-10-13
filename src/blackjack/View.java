@@ -126,33 +126,34 @@ public class View extends JFrame implements Observer {
             playerCards.add(card);
 
         }
-        int dealerHandSize = dealer.getDealerHand().getHand().size();
-        System.out.println("SDize: " + handSize);
-        Card dCa = null;
-        if (handSize == 2) { // draw initially dealt cards
-            for (Card c : dealer.getDealerHand().getHand()) {
+        if (player.getPlayerFinished() == true) {
+            int dealerHandSize = dealer.getDealerHand().getHand().size();
+            System.out.println("SDize: " + handSize);
+            Card dCa = null;
+            if (handSize == 2) { // draw initially dealt cards
+                for (Card c : dealer.getDealerHand().getHand()) {
 
-                ImageIcon ii = new ImageIcon(c.getURL());
+                    ImageIcon ii = new ImageIcon(c.getURL());
+                    Image img = ii.getImage();
+                    Image newimg = img.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
+                    ii = new ImageIcon(newimg);  // transform it back
+                    JLabel card = new JLabel(ii);
+
+                    dealerCards.add(card);
+
+                }
+            } else { // after initial deal
+
+                ca = dealer.getDealerHand().getHand().get(handSize - 1);
+
+                ImageIcon ii = new ImageIcon(ca.getURL());
                 Image img = ii.getImage();
                 Image newimg = img.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
                 ii = new ImageIcon(newimg);  // transform it back
                 JLabel card = new JLabel(ii);
 
                 dealerCards.add(card);
-
             }
-        } else { // after initial deal
-
-            ca = dealer.getDealerHand().getHand().get(handSize - 1);
-
-            ImageIcon ii = new ImageIcon(ca.getURL());
-            Image img = ii.getImage();
-            Image newimg = img.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
-            ii = new ImageIcon(newimg);  // transform it back
-            JLabel card = new JLabel(ii);
-
-            dealerCards.add(card);
-
         }
         playerCards.valueLabel.setText(player.getPlayerName() + "'s Value: " + String.valueOf(player.getPlayerHand().getHandValue()));
         dealerCards.valueLabel.setText("Dealer's Value : " + String.valueOf(dealer.getDealerHand().getHandValue()));
@@ -224,7 +225,7 @@ public class View extends JFrame implements Observer {
         public CardsPanel() {
             super(new GridLayout());
 
-            valueLabel = new JLabel("Value: ");
+            valueLabel = new JLabel();
             this.add(valueLabel, BorderLayout.EAST);
         }
 

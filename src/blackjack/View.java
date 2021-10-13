@@ -178,6 +178,8 @@ String firstCardURL = dealer.getDealerHand().getHand().get(0).getURL();
                 dealerCards.add(card);
                 dealerCards.add(backCard);
                 
+                dealerCards.valueLabel.setText("Dealer's Value : " + String.valueOf(dealer.getDealerHand().getHand().get(0).getValue().getCardValue()));
+                
 
 //            }
         } else { // after initial deal
@@ -202,8 +204,9 @@ String firstCardURL = dealer.getDealerHand().getHand().get(0).getURL();
 
                 dealerCards.add(card);
             }
+            dealerCards.valueLabel.setText("Dealer's Value : " + String.valueOf(dealer.getDealerHand().getHandValue()));
         }
-        dealerCards.valueLabel.setText("Dealer's Value : " + String.valueOf(dealer.getDealerHand().getHandValue()));
+        
         cardPanel.revalidate();
         repaint();
     }
@@ -285,7 +288,7 @@ String firstCardURL = dealer.getDealerHand().getHand().get(0).getURL();
             drawPlayerCards(data.player);
         }
 
-        if (data.dealer.getDealerHand().getHand().size() > 0 && data.dealer.getDealerFinished() == false) {
+        if (data.dealer.getDealerHand().getHand().size() > 0 && data.dealer.getDealerFinished() == false ) {
             drawDealerCards(data.player, data.dealer);
         }
         if (data.quitFlag == true) {

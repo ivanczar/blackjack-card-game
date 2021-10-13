@@ -30,6 +30,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -51,6 +52,7 @@ public class View extends JFrame implements Observer {
     public HitStandPanel hitstand = new HitStandPanel();
 
     private boolean started = false;
+    private boolean hasWinner = false;
 
     public View() {
 
@@ -67,6 +69,7 @@ public class View extends JFrame implements Observer {
 
     public void startGame() {
 
+        betPanel.betButton.setEnabled(true);
         inputPanel.add(betPanel, BorderLayout.WEST);
         inputPanel.add(hitstand, BorderLayout.CENTER);
         inputPanel.add(rightPanel, BorderLayout.EAST);
@@ -93,15 +96,16 @@ public class View extends JFrame implements Observer {
 
     public void updateBalance(Player player) {
         String s = String.valueOf(player.getPlayerBalance());
-        this.hitstand.balance.setText(s);
+        this.hitstand.balance.setText("Balance: $" + s);
         inputPanel.repaint();
     }
 
-    public void drawCards(Player player, Dealer dealer) {
-        int handSize = player.getPlayerHand().getHand().size();
-        System.out.println("SDize: " + handSize);
+    public void drawPlayerCards(Player player) {
+        int playerHandSize = player.getPlayerHand().getHand().size();
+//        System.out.println("player hand size: " + playerHandSize);
         Card ca = null;
-        if (handSize == 2) { // draw initially dealt cards
+        // DRAW PLAYER CARDS
+        if (playerHandSize == 2) { // draws first 2 cards from initial deal
             for (Card c : player.getPlayerHand().getHand()) {
 
                 ImageIcon ii = new ImageIcon(c.getURL());
@@ -115,7 +119,7 @@ public class View extends JFrame implements Observer {
             }
         } else { // after initial deal
 
-            ca = player.getPlayerHand().getHand().get(handSize - 1);
+            ca = player.getPlayerHand().getHand().get(playerHandSize - 1);
 
             ImageIcon ii = new ImageIcon(ca.getURL());
             Image img = ii.getImage();
@@ -126,27 +130,47 @@ public class View extends JFrame implements Observer {
             playerCards.add(card);
 
         }
-        if (player.getPlayerFinished() == true) {
-            int dealerHandSize = dealer.getDealerHand().getHand().size();
-            System.out.println("SDize: " + handSize);
-            Card dCa = null;
-            if (handSize == 2) { // draw initially dealt cards
-                for (Card c : dealer.getDealerHand().getHand()) {
 
-                    ImageIcon ii = new ImageIcon(c.getURL());
-                    Image img = ii.getImage();
-                    Image newimg = img.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
-                    ii = new ImageIcon(newimg);  // transform it back
-                    JLabel card = new JLabel(ii);
+        playerCards.valueLabel.setText(player.getPlayerName() + "'s Value: " + String.valueOf(player.getPlayerHand().getHandValue()));
 
-                    dealerCards.add(card);
+        cardPanel.revalidate();
+        repaint();
+    }
 
-                }
-            } else { // after initial deal
+    public void resetGame() {
+        super.getContentPane().removeAll();
+        cardPanel = new JPanel();
+        playerCards = new CardsPanel();
+        dealerCards = new CardsPanel();
+        hitstand.hit.setEnabled(false);
+        hitstand.stand.setEnabled(false);
+        this.hasWinner = false;
+        
+        startGame();
+    }
 
-                ca = dealer.getDealerHand().getHand().get(handSize - 1);
+    public void drawDealerCards(Player player, Dealer dealer) {
+        // DRAW PLAYER CARDS
+        int dealerHandSize = dealer.getDealerHand().getHand().size();
+//        System.out.println("dealer hand size: " + dealerHandSize);
+        Card dCa = null;
+        if (dealerHandSize == 2 && player.getPlayerHand().getHand().size() == 2) { // draw initially dealt cards
+            for (Card c : dealer.getDealerHand().getHand()) {
 
-                ImageIcon ii = new ImageIcon(ca.getURL());
+                ImageIcon ii = new ImageIcon(c.getURL());
+                Image img = ii.getImage();
+                Image newimg = img.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
+                ii = new ImageIcon(newimg);  // transform it back
+                JLabel card = new JLabel(ii);
+
+                dealerCards.add(card);
+
+            }
+        } else { // after initial deal
+            if (player.getPlayerFinished() == true) { // dealers card drawn only after player finishes playing
+                dCa = dealer.getDealerHand().getHand().get(dealerHandSize - 1);
+
+                ImageIcon ii = new ImageIcon(dCa.getURL());
                 Image img = ii.getImage();
                 Image newimg = img.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
                 ii = new ImageIcon(newimg);  // transform it back
@@ -155,7 +179,6 @@ public class View extends JFrame implements Observer {
                 dealerCards.add(card);
             }
         }
-        playerCards.valueLabel.setText(player.getPlayerName() + "'s Value: " + String.valueOf(player.getPlayerHand().getHandValue()));
         dealerCards.valueLabel.setText("Dealer's Value : " + String.valueOf(dealer.getDealerHand().getHandValue()));
         cardPanel.revalidate();
         repaint();
@@ -180,9 +203,34 @@ public class View extends JFrame implements Observer {
         betPanel.betButton.addActionListener(listener);
         hitstand.hit.addActionListener(listener);
         hitstand.stand.addActionListener(listener);
-//        this.nextButton.addActionListener(listener);
-//        rightPanel.quitButton.addActionListener(listener);
         rightPanel.quit.addActionListener(listener);
+        rightPanel.reset.addActionListener(listener);
+    }
+
+    public void displayWinner(Data data) {
+        System.out.println("DISPLAYING WINNER....");
+        ImageIcon icon;
+
+        switch (data.winner) {
+            case (1): // tie
+                icon = new ImageIcon("./resources/images/winner/tie.png");
+                JOptionPane.showMessageDialog(this, "YOU HAVE TIED WITH THE HOUSE!", "TIE", JOptionPane.WARNING_MESSAGE, icon);
+                break;
+            case (2): // player natural bj
+                icon = new ImageIcon("./resources/images/winner/bj.png");
+                JOptionPane.showMessageDialog(this, "YOU GOT BLACKJACK!", "BLACKJACK", JOptionPane.WARNING_MESSAGE, icon);
+                break;
+            case (3): // player wins
+                icon = new ImageIcon("./resources/images/winner/win.png");
+                JOptionPane.showMessageDialog(this, "YOU HAVE WON!", "WIN", JOptionPane.WARNING_MESSAGE, icon);
+                break;
+            case (4): // player loses
+                icon = new ImageIcon("./resources/images/winner/loss.png");
+                JOptionPane.showMessageDialog(this, "YOU HAVE LOST!", "LOSS", JOptionPane.WARNING_MESSAGE, icon);
+                break;
+        }
+
+        this.hasWinner = true;
     }
 
     // @Override
@@ -209,12 +257,27 @@ public class View extends JFrame implements Observer {
             this.hitstand.stand.setEnabled(false);
 
         }
-        if ((data.player.getPlayerHand().getHand().size() > 0) && (data.player.getPlayerFinished() == false)) { //draw if 
-            drawCards(data.player, data.dealer);
+        if ((data.player.getPlayerHand().getHand().size() > 0) && data.player.hasStand == false) { //draw if 
+            drawPlayerCards(data.player);
+        }
+
+        if (data.dealer.getDealerHand().getHand().size() > 0 && data.dealer.getDealerFinished() == false) {
+            drawDealerCards(data.player, data.dealer);
         }
         if (data.quitFlag == true) {
             this.quitGame(data.player);
 
+        }
+        if (data.resetFlag == true) {
+//            this.started = false;
+//            this.hasWinner = false;
+            data.resetFlag = false;
+
+            resetGame();
+        }
+        if (data.winner != 0 && this.hasWinner == false) {
+            displayWinner(data);
+            System.out.println("HEREE");
         }
     }
 

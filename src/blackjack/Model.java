@@ -19,10 +19,8 @@ public class Model extends Observable {
     CheckWinner checkWinner;
 
     Database db = new Database();
-
-    private int winner = 0;
-
-    ;
+    
+    
     public Model() {
         checkWinner = new CheckWinner();
         myDeck = new Deck(DECKCAPACITY);
@@ -57,8 +55,6 @@ public class Model extends Observable {
 
     public void initialDeal() {
         System.out.println("Dealing initial caRds...");
-        System.out.println("INTIAL WINS : " + data.player.getPlayerWins());
-        System.out.println("INTIAL Loss : " + data.player.getPlayerLoss());
 
         if (!(data.player.getPlayerFinished() || data.dealer.getDealerFinished())) {
 
@@ -80,23 +76,28 @@ public class Model extends Observable {
 
     public void playerHit() {
         Card c = null;
-        if (data.player.calcHandValue() <= 21) {
+        if (data.player.calcHandValue() < 21) {
             c = myDeck.deal();
             data.player.hit(c);
 
         }
-        if (data.player.calcHandValue() > 21) {
+        if (data.player.calcHandValue() >= 21) {
             data.player.setPlayerFinished(true);
-            dealerPlay();
+            this.setChanged();
+            this.notifyObservers(this.data);
+            playerStand();
+
         }
         System.out.println(data.dealer);
         System.out.println(data.player);
         this.setChanged();
         this.notifyObservers(this.data);
+
     }
 
     public void playerStand() {
         data.player.setPlayerFinished(true);
+        data.player.hasStand = true;
         dealerPlay();
         this.setChanged();
         this.notifyObservers(this.data);
@@ -120,6 +121,7 @@ public class Model extends Observable {
 
             }
         }
+        data.dealer.setDealerFinished(true);
 
         this.setChanged();
         this.notifyObservers(this.data);
@@ -129,57 +131,68 @@ public class Model extends Observable {
 
     public void checkWin() {
         checkWinner.winCondition(data.player, data.dealer);
-        this.winner = checkWinner.getWinner();
+        data.winner = checkWinner.getWinner();
 
-        switch (winner) {
+        switch (data.winner) {
             case (1):
-                System.out.println("1");
+                System.out.println("WINNER 1");
                 break;
             case (2):
-                System.out.println("2");
+                System.out.println("WINNER 2");
                 break;
             case (3):
-                System.out.println("3");
+                System.out.println("WINNER 3");
+                break;
+            case (4):
+                System.out.println("WINNER 3");
                 break;
 
         }
         setBet();
-//        quitGame();
+
         this.setChanged();
         this.notifyObservers(this.data);
     }
 
     public void setBet() {
 
-        this.bet.settleBet(data.player, winner);
+        this.bet.settleBet(data.player, data.winner);
         this.setChanged();
         this.notifyObservers(this.data); // update balance label
+
     }
 
     public void quitGame() {
-        /**
-         * Update data in the database. Go to quitGame() of Database.java for a
-         * fast check.
-         */
+
         this.db.quitGame(data.player.getPlayerName(), data.player.getPlayerBalance(), data.player.getPlayerWins(), data.player.getPlayerLoss());
         this.data.quitFlag = true; // Mark quitFlag as false.
+        
+
         this.setChanged();
         this.notifyObservers(this.data);
-        System.out.println("FINAL WINS : " + data.player.getPlayerWins());
-        System.out.println("FINAL Loss : " + data.player.getPlayerLoss());
+
     }
 
     public void resetGame() {
 
-        bet = new Bet();
-        myDeck = new Deck(DECKCAPACITY);
-        checkBJ = new CheckBJ();
-        checkWinner = new CheckWinner();
+//         db= new Database();
+        new Model();
         data.player.setPlayerHand(new Hand());
-        data.player.setHasWon(false);
+        data.player.hasStand = false;
         data.player.setPlayerFinished(false);
+        myDeck = new Deck(DECKCAPACITY);
+        data.resetFlag = true;
+        data.winner = 0;
+        data.player.setHasWon(false);
 
         data.dealer = new Dealer();
+        checkBJ = new CheckBJ();
+        checkWinner = new CheckWinner();
+
+        bet = new Bet();
+
+        this.setChanged();
+        this.notifyObservers(this.data); // update balance label
 
     }
 

@@ -36,13 +36,6 @@ public class Controller implements ActionListener {
                 this.model.checkName(username, password);
 
                 break;
-            case "STAND":
-                this.model.playerStand();
-                break;
-            case "HIT":
-                this.model.playerHit();
-
-                break;
             case "Place bet":
                 System.out.println("pressed place bet");
                 double bet = Double.parseDouble(this.view.betPanel.betField.getText());
@@ -52,8 +45,21 @@ public class Controller implements ActionListener {
                 this.model.initialDeal();
 
                 break;
-            case "Quit":
+            case "HIT":
+                this.model.playerHit();
+
+                break;
+
+            case "STAND":
+                this.model.playerStand();
+                break;
+
+            case "End Game":
                 this.model.quitGame();
+                break;
+            case "Reset":
+                System.out.println("Reset pressed");
+                this.model.resetGame();
 //            
 
         }

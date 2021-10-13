@@ -53,6 +53,7 @@ public class View extends JFrame implements Observer {
 
     private boolean started = false;
     private boolean hasWinner = false;
+    JLabel backCard;
 
     public View() {
 
@@ -148,6 +149,7 @@ public class View extends JFrame implements Observer {
         this.hasWinner = false;
         betPanel.betField.setText("");
         betPanel.betAmount.setText("Bet Amount:");
+
         
         startGame();
     }
@@ -157,20 +159,39 @@ public class View extends JFrame implements Observer {
         int dealerHandSize = dealer.getDealerHand().getHand().size();
 //        System.out.println("dealer hand size: " + dealerHandSize);
         Card dCa = null;
+        
         if (dealerHandSize == 2 && player.getPlayerHand().getHand().size() == 2) { // draw initially dealt cards
-            for (Card c : dealer.getDealerHand().getHand()) {
-
-                ImageIcon ii = new ImageIcon(c.getURL());
+//            for (Card c : dealer.getDealerHand().getHand()) {
+String firstCardURL = dealer.getDealerHand().getHand().get(0).getURL();
+                ImageIcon ii = new ImageIcon(firstCardURL);
                 Image img = ii.getImage();
                 Image newimg = img.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
                 ii = new ImageIcon(newimg);  // transform it back
                 JLabel card = new JLabel(ii);
 
+                ImageIcon jj = new ImageIcon("./resources/images/cards/back.png");
+                Image img2 = jj.getImage();
+                Image newimg2 = img2.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
+                jj = new ImageIcon(newimg2);  // transform it back
+                backCard = new JLabel(jj);
+                
                 dealerCards.add(card);
+                dealerCards.add(backCard);
+                
 
-            }
+//            }
         } else { // after initial deal
             if (player.getPlayerFinished() == true) { // dealers card drawn only after player finishes playing
+                
+                dealerCards.remove(backCard);
+                String secondCardURL = dealer.getDealerHand().getHand().get(1).getURL();
+                ImageIcon jj = new ImageIcon(secondCardURL);
+                Image img2 = jj.getImage();
+                Image newimg2 = img2.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
+                jj = new ImageIcon(newimg2);  // transform it back
+                JLabel secondCard = new JLabel(jj);
+                dealerCards.add(secondCard);
+                
                 dCa = dealer.getDealerHand().getHand().get(dealerHandSize - 1);
 
                 ImageIcon ii = new ImageIcon(dCa.getURL());

@@ -33,16 +33,28 @@ public class Controller implements ActionListener {
                 System.out.println("Login Pressed");
                 String username = this.view.loginPanel.unInput.getText();
                 String password = this.view.loginPanel.pwInput.getText();
+               
                 this.model.checkName(username, password);
 
                 break;
             case "Place bet":
                 System.out.println("pressed place bet");
-                double bet = Double.parseDouble(this.view.betPanel.betField.getText());
-
-                this.model.placeBet(this.model.data.player, bet);
-
-                this.model.initialDeal();
+                double bet = 0;
+                try {
+                    bet = Double.parseDouble(this.view.betPanel.betField.getText());
+                  
+                } catch (NumberFormatException ex) {
+                    view.invalidBet();
+                    view.betPanel.betField.setText("");
+                    
+                }
+                if (bet != 0 && bet <= model.data.player.getPlayerBalance()) {
+                    this.model.placeBet(this.model.data.player, bet);
+                    model.initialDeal();
+                }
+                else
+                    view.invalidBet();
+                System.out.println(this.model.bet.getBetAmount());
 
                 break;
             case "HIT":
@@ -60,6 +72,12 @@ public class Controller implements ActionListener {
             case "Reset":
                 System.out.println("Reset pressed");
                 this.model.resetGame();
+                break;
+            case "Help":
+                System.out.println("help clicked");
+                String rules = model.data.rules;
+                this.view.help(rules);
+                break;
 //            
 
         }

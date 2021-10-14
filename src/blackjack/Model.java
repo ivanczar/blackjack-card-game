@@ -34,6 +34,8 @@ public class Model extends Observable {
     public void checkName(String playerName, String password) {
 
         this.data.player = db.checkName(playerName, password);
+        data.rules = db.populateInfoTable();
+        data.leaderBoard = db.populateLeaderTable();
 
         System.out.println(data.player.getPlayerBalance());
         this.setChanged();
@@ -101,7 +103,7 @@ public class Model extends Observable {
         if (data.player.isBust == false) { // dealer plays only if player has stood (not bust)
             dealerPlay();
         }
-        
+
         this.setChanged();
         this.notifyObservers(this.data);
     }
@@ -133,6 +135,8 @@ public class Model extends Observable {
         checkWin();
 
     }
+
+
 
     public void checkWin() {
         checkWinner.winCondition(data.player, data.dealer);
@@ -194,8 +198,6 @@ public class Model extends Observable {
         checkBJ = new CheckBJ();
         bet = new Bet();
         checkWinner = new CheckWinner();
-
-        
 
         this.setChanged();
         this.notifyObservers(this.data); // update balance label

@@ -32,6 +32,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 /**
@@ -212,17 +213,29 @@ public class View extends JFrame implements Observer {
         this.revalidate();
         this.repaint();
     }
+    
+    public void help(String rules)
+    {
+        System.out.println(rules);
+        JOptionPane.showMessageDialog(this, rules, "RULES", JOptionPane.WARNING_MESSAGE);
+    }
 
-    private void quitGame(Player player) {
+    private void quitGame(Data data) {
 
-        JPanel quitPanel = new JPanel();
-        JLabel scoreLabel = new JLabel("Your balance: " + player.getPlayerBalance());
-        JLabel ratioLabel = new JLabel("You have " + player.getPlayerWins() + " wins and " + player.getPlayerLoss() + " losses");
-        quitPanel.add(scoreLabel);
-        quitPanel.add(ratioLabel);
+        System.out.println(data.leaderBoard);
+        JPanel quitPanel = new JPanel(new BorderLayout());
+        JLabel scoreLabel = new JLabel("Your balance: " + data.player.getPlayerBalance());
+        JLabel ratioLabel = new JLabel("You have " + data.player.getPlayerWins() + " wins and " + data.player.getPlayerLoss() + " losses");
+        JTextArea leaderBoard = new JTextArea("LEADERBOARD\n " + data.leaderBoard);
+        leaderBoard.setEditable(false);
         this.getContentPane().removeAll();
+        quitPanel.add(scoreLabel, BorderLayout.SOUTH);
+        quitPanel.add(ratioLabel, BorderLayout.CENTER);
+        quitPanel.add(leaderBoard, BorderLayout.NORTH);
+        
         //calcPanel.setVisible(true);
-        this.add(quitPanel);
+        this.add(quitPanel, BorderLayout.NORTH);
+        
         this.revalidate();
         this.repaint();
     }
@@ -234,6 +247,12 @@ public class View extends JFrame implements Observer {
         hitstand.stand.addActionListener(listener);
         rightPanel.quit.addActionListener(listener);
         rightPanel.reset.addActionListener(listener);
+        rightPanel.help.addActionListener(listener);
+    }
+    
+    public void invalidBet()
+    {
+        JOptionPane.showMessageDialog(this, "Bet must be a number and valued below your balance!", "INVALID INPUT", JOptionPane.WARNING_MESSAGE);
     }
 
     public void displayWinner(Data data) {
@@ -270,7 +289,7 @@ public class View extends JFrame implements Observer {
         if (!data.player.isLoginFlag()) {
             loginPanel.unInput.setText("");
             loginPanel.pwInput.setText("");
-
+            JOptionPane.showMessageDialog(this, "Wrong username or password!", "WRONG CREDENTIALS", JOptionPane.WARNING_MESSAGE);
         } else if (!this.started) {
             this.startGame();
             updateBalance(data.player);
@@ -294,7 +313,7 @@ public class View extends JFrame implements Observer {
             drawDealerCards(data.player, data.dealer);
         }
         if (data.quitFlag == true) {
-            this.quitGame(data.player);
+            this.quitGame(data);
 
         }
         if (data.resetFlag == true) {

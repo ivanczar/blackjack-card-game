@@ -43,7 +43,7 @@ public class View extends JFrame implements Observer {
 
     public LoginPanel loginPanel = new LoginPanel();
 
-    public JPanel cardPanel = new JPanel(new BorderLayout());
+    public JPanel cardPanel = new JPanel(new GridLayout(2, 1));
     public CardsPanel playerCards = new CardsPanel();
     public CardsPanel dealerCards = new CardsPanel();
 
@@ -87,8 +87,8 @@ public class View extends JFrame implements Observer {
         inputPanel.add(hitstand, BorderLayout.CENTER);
         inputPanel.add(rightPanel, BorderLayout.EAST);
 
-        cardPanel.add(playerCards, BorderLayout.SOUTH);
-        cardPanel.add(dealerCards, BorderLayout.NORTH);
+        cardPanel.add(dealerCards);
+        cardPanel.add(playerCards);
 
         this.getContentPane().removeAll();
         this.setVisible(true);
@@ -148,14 +148,14 @@ public class View extends JFrame implements Observer {
         }
 
         playerCards.valueLabel.setText(player.getPlayerName() + "'s Value: " + String.valueOf(player.getPlayerHand().getHandValue()));
-
+//        playerCards.valueLabel.setForeground(Color.WHITE);
         this.revalidate();
         this.repaint();
     }
 
     public void resetGame() {
         super.getContentPane().removeAll();
-        cardPanel = new JPanel(new BorderLayout());
+        cardPanel = new JPanel(new GridLayout(2, 1));
         playerCards = new CardsPanel();
         dealerCards = new CardsPanel();
 
@@ -194,7 +194,7 @@ public class View extends JFrame implements Observer {
             dealerCards.add(backCard);
 
             dealerCards.valueLabel.setText("Dealer's Value : " + String.valueOf(dealer.getDealerHand().getHand().get(0).getValue().getCardValue()));
-
+//            dealerCards.valueLabel.setForeground(Color.WHITE);
 //            }
         } else { // after initial deal
             if (player.getPlayerFinished() == true && player.isBust == false && player.getPlayerFinished() == true) { // dealers card drawn only after player finishes playing
@@ -219,6 +219,7 @@ public class View extends JFrame implements Observer {
                 dealerCards.add(card);
             }
             dealerCards.valueLabel.setText("Dealer's Value : " + String.valueOf(dealer.getDealerHand().getHandValue()));
+//            dealerCards.valueLabel.setForeground(Color.WHITE);
         }
 
         this.revalidate();
@@ -340,7 +341,7 @@ public class View extends JFrame implements Observer {
 
     private static class CardsPanel extends JPanel {
 
-        JLabel valueLabel;
+        JLabel valueLabel = new JLabel("");
         private BufferedImage img = null;
 
         public CardsPanel() {
@@ -350,8 +351,9 @@ public class View extends JFrame implements Observer {
             } catch (IOException ex) {
                 Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
             }
-            valueLabel = new JLabel();
-            this.add(valueLabel, BorderLayout.EAST);
+            valueLabel.setForeground(Color.WHITE);
+//            valueLabel = new JLabel();
+            this.add(valueLabel, BorderLayout.WEST);
         }
 
         @Override

@@ -35,6 +35,7 @@ public class Controller implements ActionListener {
                 String password = this.view.loginPanel.pwInput.getText();
                
                 this.model.checkName(username, password);
+                System.out.println("CHECKNAME CALLED IN CONTROLLEr");
 
                 break;
             case "Place bet":
@@ -72,13 +73,16 @@ public class Controller implements ActionListener {
             case "Reset":
                 System.out.println("Reset pressed");
                 this.model.resetGame();
+                
                 break;
             case "Help":
                 System.out.println("help clicked");
                 String rules = model.data.rules;
                 this.view.help(rules);
                 break;
-//            
+            case "Logout":
+                model.logout();
+                view.logout();
 
         }
 

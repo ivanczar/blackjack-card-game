@@ -33,10 +33,14 @@ public class Model extends Observable {
 
     public void checkName(String playerName, String password) {
 
+        
+        
+        System.out.println("MODEL CHECKNAME CALLED");
         this.data.player = db.checkName(playerName, password);
         data.rules = db.populateInfoTable();
         data.leaderBoard = db.populateLeaderTable();
 
+        System.out.println(data.player);
         System.out.println(data.player.getPlayerBalance());
         this.setChanged();
         this.notifyObservers(this.data);
@@ -109,7 +113,7 @@ public class Model extends Observable {
     }
 
     public void dealerPlay() {
-        if ((data.player.calcHandValue() < 21) && !data.dealer.getDealerFinished()) {
+        if ((data.player.calcHandValue() < 21) && data.player.getPlayerFinished() == true) {
             // DEALER TURN - CAN HIT IF HANDVALUE < 17   
 
             // dealer only hits if allowed and is beneficial (eg player has a higher handvalue than them)
@@ -135,8 +139,6 @@ public class Model extends Observable {
         checkWin();
 
     }
-
-
 
     public void checkWin() {
         checkWinner.winCondition(data.player, data.dealer);
@@ -201,6 +203,26 @@ public class Model extends Observable {
 
         this.setChanged();
         this.notifyObservers(this.data); // update balance label
+
+    }
+
+    public void logout() {
+        db.quitGame(data.player.getPlayerName(), data.player.getPlayerBalance(), data.player.getPlayerWins(), data.player.getPlayerLoss());
+        db = new Database();
+        new Model();
+        data.player.setPlayerHand(new Hand());
+        data.player.hasStand = false;
+        data.player.setPlayerFinished(false);
+        myDeck = new Deck(DECKCAPACITY);
+        data.resetFlag = true;
+        data.winner = 0;
+        data.player.setHasWon(false);
+        data.player.isBust = false;
+
+        data.dealer = new Dealer();
+        checkBJ = new CheckBJ();
+        bet = new Bet();
+        checkWinner = new CheckWinner();
 
     }
 

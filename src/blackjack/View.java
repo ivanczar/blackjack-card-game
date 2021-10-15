@@ -69,6 +69,17 @@ public class View extends JFrame implements Observer {
 
     }
 
+    public void addActionListener(ActionListener listener) {
+        loginPanel.loginButton.addActionListener(listener);
+        betPanel.betButton.addActionListener(listener);
+        hitstand.hit.addActionListener(listener);
+        hitstand.stand.addActionListener(listener);
+        rightPanel.quit.addActionListener(listener);
+        rightPanel.reset.addActionListener(listener);
+        rightPanel.help.addActionListener(listener);
+        rightPanel.logout.addActionListener(listener);
+    }
+
     public void startGame() {
 
         betPanel.betButton.setEnabled(true);
@@ -123,15 +134,15 @@ public class View extends JFrame implements Observer {
             }
         } else { // after initial deal
 //            if (player.isBust == false) { WONT DRAW FINAL CARD
-                ca = player.getPlayerHand().getHand().get(playerHandSize - 1);
+            ca = player.getPlayerHand().getHand().get(playerHandSize - 1);
 
-                ImageIcon ii = new ImageIcon(ca.getURL());
-                Image img = ii.getImage();
-                Image newimg = img.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
-                ii = new ImageIcon(newimg);  // transform it back
-                JLabel card = new JLabel(ii);
+            ImageIcon ii = new ImageIcon(ca.getURL());
+            Image img = ii.getImage();
+            Image newimg = img.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
+            ii = new ImageIcon(newimg);  // transform it back
+            JLabel card = new JLabel(ii);
 
-                playerCards.add(card);
+            playerCards.add(card);
 
 //            }
         }
@@ -186,7 +197,7 @@ public class View extends JFrame implements Observer {
 
 //            }
         } else { // after initial deal
-            if (player.getPlayerFinished() == true && player.isBust == false) { // dealers card drawn only after player finishes playing
+            if (player.getPlayerFinished() == true && player.isBust == false && player.getPlayerFinished() == true) { // dealers card drawn only after player finishes playing
 
                 dealerCards.remove(backCard);
                 String secondCardURL = dealer.getDealerHand().getHand().get(1).getURL();
@@ -213,11 +224,9 @@ public class View extends JFrame implements Observer {
         this.revalidate();
         this.repaint();
     }
-    
-    public void help(String rules)
-    {
-        System.out.println(rules);
-        JOptionPane.showMessageDialog(this, rules, "RULES", JOptionPane.WARNING_MESSAGE);
+
+    public void help(String rules) {
+        JOptionPane.showMessageDialog(this, rules, "RULES", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void quitGame(Data data) {
@@ -232,26 +241,15 @@ public class View extends JFrame implements Observer {
         quitPanel.add(scoreLabel, BorderLayout.SOUTH);
         quitPanel.add(ratioLabel, BorderLayout.CENTER);
         quitPanel.add(leaderBoard, BorderLayout.NORTH);
-        
+
         //calcPanel.setVisible(true);
         this.add(quitPanel, BorderLayout.NORTH);
-        
+
         this.revalidate();
         this.repaint();
     }
 
-    public void addActionListener(ActionListener listener) {
-        loginPanel.loginButton.addActionListener(listener);
-        betPanel.betButton.addActionListener(listener);
-        hitstand.hit.addActionListener(listener);
-        hitstand.stand.addActionListener(listener);
-        rightPanel.quit.addActionListener(listener);
-        rightPanel.reset.addActionListener(listener);
-        rightPanel.help.addActionListener(listener);
-    }
-    
-    public void invalidBet()
-    {
+    public void invalidBet() {
         JOptionPane.showMessageDialog(this, "Bet must be a number and valued below your balance!", "INVALID INPUT", JOptionPane.WARNING_MESSAGE);
     }
 
@@ -279,6 +277,17 @@ public class View extends JFrame implements Observer {
         }
 
         this.hasWinner = true;
+    }
+
+    public void logout() {
+        this.getContentPane().removeAll();
+        loginPanel.pwInput.setText("");
+        loginPanel.unInput.setText("");
+        started = false;
+        hasWinner = false;
+        this.add(loginPanel);
+        this.revalidate();
+        this.repaint();
     }
 
     // @Override
@@ -332,14 +341,24 @@ public class View extends JFrame implements Observer {
     private static class CardsPanel extends JPanel {
 
         JLabel valueLabel;
+        private BufferedImage img = null;
 
         public CardsPanel() {
             super(new GridLayout());
-
+            try {
+                img = ImageIO.read(new File("./resources/images/gameBackground.jpg"));
+            } catch (IOException ex) {
+                Logger.getLogger(View.class.getName()).log(Level.SEVERE, null, ex);
+            }
             valueLabel = new JLabel();
             this.add(valueLabel, BorderLayout.EAST);
         }
 
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage(img, 0, 0, null);
+        }
     }
 
 }

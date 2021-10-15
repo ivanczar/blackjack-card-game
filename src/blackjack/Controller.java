@@ -33,7 +33,7 @@ public class Controller implements ActionListener {
                 System.out.println("Login Pressed");
                 String username = this.view.loginPanel.unInput.getText();
                 String password = this.view.loginPanel.pwInput.getText();
-               
+
                 this.model.checkName(username, password);
                 System.out.println("CHECKNAME CALLED IN CONTROLLEr");
 
@@ -43,18 +43,18 @@ public class Controller implements ActionListener {
                 double bet = 0;
                 try {
                     bet = Double.parseDouble(this.view.betPanel.betField.getText());
-                  
+
                 } catch (NumberFormatException ex) {
                     view.invalidBet();
                     view.betPanel.betField.setText("");
-                    
+
                 }
                 if (bet != 0 && bet <= model.data.player.getPlayerBalance()) {
                     this.model.placeBet(this.model.data.player, bet);
                     model.initialDeal();
-                }
-                else
+                } else {
                     view.invalidBet();
+                }
                 System.out.println(this.model.bet.getBetAmount());
 
                 break;
@@ -73,7 +73,7 @@ public class Controller implements ActionListener {
             case "Reset":
                 System.out.println("Reset pressed");
                 this.model.resetGame();
-                
+
                 break;
             case "Help":
                 System.out.println("help clicked");
@@ -83,7 +83,12 @@ public class Controller implements ActionListener {
             case "Logout":
                 model.logout();
                 view.logout();
-
+                break;
+            case "Exit":
+                if (model.data.player != null && model.db.conn != null) {
+                    model.db.quitGame(model.data.player.getPlayerName(), model.data.player.getPlayerBalance(), model.data.player.getPlayerWins(), model.data.player.getPlayerLoss());
+                }
+                System.exit(0);
         }
 
     }

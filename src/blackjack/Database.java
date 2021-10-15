@@ -126,7 +126,7 @@ public class Database {
             }
 
             System.out.println(leaderBoard);
-            rs.close();
+            
             statement.close();
         } catch (SQLException ex) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
@@ -173,7 +173,7 @@ public class Database {
                 player.setLoginFlag(true);
             }
             statement.close();
-            rs.close();
+            
         } catch (SQLException ex) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -189,7 +189,7 @@ public class Database {
                 return false;
             }
 
-            rs.close();
+           
         } catch (SQLException ex) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -203,9 +203,10 @@ public class Database {
             statement.executeUpdate("UPDATE PLAYERINFO SET balance=" + balance + ", wins=" + wins + ", loss=" + loss + " WHERE username='" + username + "'");
 
             statement.close();
+//            conn.close();
         } catch (SQLException ex) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
     }
 }

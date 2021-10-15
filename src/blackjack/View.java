@@ -34,6 +34,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 /**
  *
@@ -43,6 +44,7 @@ public class View extends JFrame implements Observer {
 
     public LoginPanel loginPanel = new LoginPanel();
 
+   
     public JPanel cardPanel = new JPanel(new GridLayout(2, 1));
     public CardsPanel playerCards = new CardsPanel();
     public CardsPanel dealerCards = new CardsPanel();
@@ -78,6 +80,9 @@ public class View extends JFrame implements Observer {
         rightPanel.reset.addActionListener(listener);
         rightPanel.help.addActionListener(listener);
         rightPanel.logout.addActionListener(listener);
+        loginPanel.exitButton.addActionListener(listener);
+        
+        
     }
 
     public void startGame() {
@@ -233,18 +238,11 @@ public class View extends JFrame implements Observer {
     private void quitGame(Data data) {
 
         System.out.println(data.leaderBoard);
-        JPanel quitPanel = new JPanel(new BorderLayout());
-        JLabel scoreLabel = new JLabel("Your balance: " + data.player.getPlayerBalance());
-        JLabel ratioLabel = new JLabel("You have " + data.player.getPlayerWins() + " wins and " + data.player.getPlayerLoss() + " losses");
-        JTextArea leaderBoard = new JTextArea("LEADERBOARD\n " + data.leaderBoard);
-        leaderBoard.setEditable(false);
+        QuitPanel quitPanel = new QuitPanel(data);
+        
         this.getContentPane().removeAll();
-        quitPanel.add(scoreLabel, BorderLayout.SOUTH);
-        quitPanel.add(ratioLabel, BorderLayout.CENTER);
-        quitPanel.add(leaderBoard, BorderLayout.NORTH);
-
         //calcPanel.setVisible(true);
-        this.add(quitPanel, BorderLayout.NORTH);
+        this.add(quitPanel);
 
         this.revalidate();
         this.repaint();

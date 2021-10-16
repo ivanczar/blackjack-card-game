@@ -31,24 +31,37 @@ public class Model extends Observable {
 
     }
 
+    /**
+     * calls database checkname, which returns a player object which is then 
+     * assigned to this data player. Also calls populate info and leader table
+     * in database and assigns return values to respective data fields.
+     * @param playerName
+     * @param password 
+     */
     public void checkName(String playerName, String password) {
 
-        
-        
         System.out.println("MODEL CHECKNAME CALLED");
         this.data.player = db.checkName(playerName, password);
-        data.rules = db.populateInfoTable();
-        data.leaderBoard = db.populateLeaderTable();
 
-        System.out.println(data.player);
-        System.out.println(data.player.getPlayerBalance());
+        data.rules = db.getRules();
+//        data.leaderBoard = db.getLeaderBoard();
+data.leaderBoard = db.populateLeaderTable();
+        data.credits = db.getCredits();
+        
+        
+        
         this.setChanged();
         this.notifyObservers(this.data);
 
     }
 
+    /**
+     * sets bet value of bet object instance by calling the bet placeBet method,
+     * @param player
+     * @param betAmount 
+     */ 
     public void placeBet(Player player, Double betAmount) {
-//        if (player.isLoginFlag() && betAmount <= player.getPlayerBalance()) {
+
         System.out.println("Bet placed");
         this.bet.placeBet(player, betAmount);
 
@@ -57,7 +70,10 @@ public class Model extends Observable {
 //        }
 
     }
-
+    
+    /**
+     * Deals initial 2 cards for each player and checks for BlackJack condition
+     */
     public void initialDeal() {
         System.out.println("Dealing initial caRds...");
 
@@ -79,11 +95,14 @@ public class Model extends Observable {
         this.notifyObservers(this.data);
     }
 
+    /**
+     * Calls player hit method and calls checkWin and sets isBust=true if player busts
+     */
     public void playerHit() {
         Card c = null;
         if (data.player.calcHandValue() < 21) {
-            c = myDeck.deal();
-            data.player.hit(c);
+           
+            data.player.hit(myDeck.deal());
 
         }
         if (data.player.calcHandValue() >= 21) {
@@ -101,6 +120,9 @@ public class Model extends Observable {
 
     }
 
+    /**
+     * sets player instance variables to stand status. Calls dealerPlay if player has not yet bust
+     */
     public void playerStand() {
         data.player.setPlayerFinished(true);
         data.player.hasStand = true;
@@ -112,6 +134,9 @@ public class Model extends Observable {
         this.notifyObservers(this.data);
     }
 
+    /**
+     * calls dealer hit method while allowed by rules, checks if dealer busts.
+     */
     public void dealerPlay() {
         if ((data.player.calcHandValue() < 21) && data.player.getPlayerFinished() == true) {
             // DEALER TURN - CAN HIT IF HANDVALUE < 17   
@@ -140,6 +165,9 @@ public class Model extends Observable {
 
     }
 
+    /**
+     *  Sets data winner instance variable to return value of CheckWinner winCondition()
+     */
     public void checkWin() {
         checkWinner.winCondition(data.player, data.dealer);
         data.winner = checkWinner.getWinner();
@@ -159,13 +187,16 @@ public class Model extends Observable {
                 break;
 
         }
-        setBet();
+        settleBets();
 
         this.setChanged();
         this.notifyObservers(this.data);
     }
 
-    public void setBet() {
+    /**
+     * Calls the settleBet method of the Bet instance
+     */
+    public void settleBets() {
 
         this.bet.settleBet(data.player, data.winner);
         this.setChanged();
@@ -173,6 +204,9 @@ public class Model extends Observable {
 
     }
 
+    /**
+     *  Calls database quitGame(). sets data quitFlag to true
+     */
     public void quitGame() {
 
         this.db.quitGame(data.player.getPlayerName(), data.player.getPlayerBalance(), data.player.getPlayerWins(), data.player.getPlayerLoss());
@@ -183,6 +217,9 @@ public class Model extends Observable {
 
     }
 
+    /**
+     * Re-initializes objects and resets variables to default. Player object remains
+     */
     public void resetGame() {
 
 //         db= new Database();
@@ -206,6 +243,9 @@ public class Model extends Observable {
 
     }
 
+    /**
+     * Calls databse quitGame() re-initalizes objects and resets variables to defAult, including player object
+     */
     public void logout() {
         db.quitGame(data.player.getPlayerName(), data.player.getPlayerBalance(), data.player.getPlayerWins(), data.player.getPlayerLoss());
         db = new Database();

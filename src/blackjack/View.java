@@ -7,34 +7,24 @@ package blackjack;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Menu;
-import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 /**
  *
@@ -44,7 +34,6 @@ public class View extends JFrame implements Observer {
 
     public LoginPanel loginPanel = new LoginPanel();
 
-   
     public JPanel cardPanel = new JPanel(new GridLayout(2, 1));
     public CardsPanel playerCards = new CardsPanel();
     public CardsPanel dealerCards = new CardsPanel();
@@ -53,6 +42,8 @@ public class View extends JFrame implements Observer {
     public BetPanel betPanel = new BetPanel();
     public RightPanel rightPanel = new RightPanel();
     public HitStandPanel hitstand = new HitStandPanel();
+    
+    QuitPanel quitPanel = new QuitPanel();
 
     private boolean started = false;
     private boolean hasWinner = false;
@@ -81,10 +72,14 @@ public class View extends JFrame implements Observer {
         rightPanel.help.addActionListener(listener);
         rightPanel.logout.addActionListener(listener);
         loginPanel.exitButton.addActionListener(listener);
+        quitPanel.aboutButton.addActionListener(listener);
         
-        
+
     }
 
+    /**
+     * adds JPanel components relating to game to JFrame
+     */
     public void startGame() {
 
         betPanel.betButton.setEnabled(true);
@@ -104,6 +99,11 @@ public class View extends JFrame implements Observer {
 
     }
 
+    /**
+     * Updates the bet label to whatever the user input
+     *
+     * @param betAmount
+     */
     public void setBetLabel(Double betAmount) {
         this.betPanel.betAmount.setText("Bet Amount: $" + this.betPanel.betField.getText());
         this.betPanel.betButton.setEnabled(false); // disables preventing user from placing bets during game
@@ -113,6 +113,11 @@ public class View extends JFrame implements Observer {
         this.repaint();
     }
 
+    /**
+     * Updates the balance label to the players current balance
+     *
+     * @param player
+     */
     public void updateBalance(Player player) {
         String s = String.valueOf(player.getPlayerBalance());
         this.hitstand.balance.setText("Balance: $" + s);
@@ -120,6 +125,11 @@ public class View extends JFrame implements Observer {
         this.repaint();
     }
 
+    /**
+     * Draws players card onto playerCards JPanel
+     *
+     * @param player
+     */
     public void drawPlayerCards(Player player) {
         int playerHandSize = player.getPlayerHand().getHand().size();
 //        System.out.println("player hand size: " + playerHandSize);
@@ -128,6 +138,7 @@ public class View extends JFrame implements Observer {
         if (playerHandSize == 2) { // draws first 2 cards from initial deal
             for (Card c : player.getPlayerHand().getHand()) {
 
+                // Sets ImageIcon of JLabel to jpg of card. Adds JLabel to panel
                 ImageIcon ii = new ImageIcon(c.getURL());
                 Image img = ii.getImage();
                 Image newimg = img.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
@@ -151,13 +162,14 @@ public class View extends JFrame implements Observer {
 
 //            }
         }
-
+        // Updates player hand value lAbel on left of drawn cards
         playerCards.valueLabel.setText(player.getPlayerName() + "'s Value: " + String.valueOf(player.getPlayerHand().getHandValue()));
 //        playerCards.valueLabel.setForeground(Color.WHITE);
         this.revalidate();
         this.repaint();
     }
 
+    // Reintialize panels and hasWinner variable for new game
     public void resetGame() {
         super.getContentPane().removeAll();
         cardPanel = new JPanel(new GridLayout(2, 1));
@@ -174,6 +186,12 @@ public class View extends JFrame implements Observer {
         startGame();
     }
 
+    /**
+     * Draws dealers card onto dealerCards JPanel
+     *
+     * @param player
+     * @param dealer
+     */
     public void drawDealerCards(Player player, Dealer dealer) {
         // DRAW PLAYER CARDS
         int dealerHandSize = dealer.getDealerHand().getHand().size();
@@ -196,7 +214,7 @@ public class View extends JFrame implements Observer {
             backCard = new JLabel(jj);
 
             dealerCards.add(card);
-            dealerCards.add(backCard);
+            dealerCards.add(backCard); // During initial deal, second card is face down
 
             dealerCards.valueLabel.setText("Dealer's Value : " + String.valueOf(dealer.getDealerHand().getHand().get(0).getValue().getCardValue()));
 //            dealerCards.valueLabel.setForeground(Color.WHITE);
@@ -211,7 +229,7 @@ public class View extends JFrame implements Observer {
                 Image newimg2 = img2.getScaledInstance(150, 220, java.awt.Image.SCALE_SMOOTH); // scale image 
                 jj = new ImageIcon(newimg2);  // transform it back
                 JLabel secondCard = new JLabel(jj);
-                dealerCards.add(secondCard);
+                dealerCards.add(secondCard); // face down card is now face up after initial deal
 
                 dCa = dealer.getDealerHand().getHand().get(dealerHandSize - 1);
 
@@ -231,14 +249,29 @@ public class View extends JFrame implements Observer {
         this.repaint();
     }
 
+    /**
+     * Displays blackjack rules on a JOptionPane
+     *
+     * @param rules
+     */
     public void help(String rules) {
+        System.out.println(rules);
         JOptionPane.showMessageDialog(this, rules, "RULES", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * Displays end screen with player stats and leaderboard
+     *
+     * @param data
+     */
     private void quitGame(Data data) {
 
         System.out.println(data.leaderBoard);
-        QuitPanel quitPanel = new QuitPanel(data);
+        
+
+        quitPanel.scoreLabel.setText("Your balance: " + data.player.getPlayerBalance());
+        quitPanel.ratioLabel.setText("You have " + data.player.getPlayerWins() + " wins and " + data.player.getPlayerLoss() + " losses");
+        quitPanel.leaderBoard.setText("\tLEADERBOARD\n " + data.leaderBoard);
         
         this.getContentPane().removeAll();
         //calcPanel.setVisible(true);
@@ -248,10 +281,18 @@ public class View extends JFrame implements Observer {
         this.repaint();
     }
 
+    /**
+     * Displays invalid bet error message on JOptionPane
+     */
     public void invalidBet() {
         JOptionPane.showMessageDialog(this, "Bet must be a number and valued below your balance!", "INVALID INPUT", JOptionPane.WARNING_MESSAGE);
     }
 
+    /**
+     * Displays winner message on JOptionPane depending on data winner value
+     *
+     * @param data
+     */
     public void displayWinner(Data data) {
         System.out.println("DISPLAYING WINNER....");
         ImageIcon icon;
@@ -277,7 +318,18 @@ public class View extends JFrame implements Observer {
 
         this.hasWinner = true;
     }
+    
+    /**
+     * Displays credits in JOptionPane
+     */
+    public void displayAbout(Data data)
+    {
+        JOptionPane.showMessageDialog(this, data.credits, "CREDITS" , JOptionPane.WARNING_MESSAGE);
+    }
 
+    /**
+     * Displays login panel and resets View class flags
+     */
     public void logout() {
         this.getContentPane().removeAll();
         loginPanel.pwInput.setText("");
@@ -289,6 +341,12 @@ public class View extends JFrame implements Observer {
         this.repaint();
     }
 
+    /**
+     * Called when Model calls notifyObservers()
+     *
+     * @param o
+     * @param arg
+     */
     // @Override
     public void update(Observable o, Object arg) {
         Data data = (Data) arg;

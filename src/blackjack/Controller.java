@@ -24,6 +24,10 @@ public class Controller implements ActionListener {
 
     }
 
+    /**
+     * Listener for buttons
+     * @param e 
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
@@ -41,15 +45,15 @@ public class Controller implements ActionListener {
             case "Place bet":
                 System.out.println("pressed place bet");
                 double bet = 0;
-                try {
+                try { // checks that input is numerical
                     bet = Double.parseDouble(this.view.betPanel.betField.getText());
 
                 } catch (NumberFormatException ex) {
-                    view.invalidBet();
+//                   
                     view.betPanel.betField.setText("");
 
                 }
-                if (bet != 0 && bet <= model.data.player.getPlayerBalance()) {
+                if (!(bet <= 0) && bet <= model.data.player.getPlayerBalance()) { // check that input is within player balance range
                     this.model.placeBet(this.model.data.player, bet);
                     model.initialDeal();
                 } else {
@@ -84,6 +88,8 @@ public class Controller implements ActionListener {
                 model.logout();
                 view.logout();
                 break;
+            case "About":
+                view.displayAbout(model.data);
             case "Exit":
                 if (model.data.player != null && model.db.conn != null) {
                     model.db.quitGame(model.data.player.getPlayerName(), model.data.player.getPlayerBalance(), model.data.player.getPlayerWins(), model.data.player.getPlayerLoss());

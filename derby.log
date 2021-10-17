@@ -1,10 +1,10 @@
 ----------------------------------------------------------------
-Sun Oct 17 00:28:21 NZDT 2021:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-017c-88dc-243f-000003a2ad20 
-on database directory C:\Users\Ivan\Desktop\UNI2021Sem2(ESTE)\Software Construction\BlackJack\PlayerDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@2ff4acd0 
+Sun Oct 17 17:55:12 NZDT 2021:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-017c-8c9a-9090-000006bbcfc8 
+on database directory C:\Users\Ivan\Desktop\UNI2021Sem2(ESTE)\Software Construction\BlackJack\PlayerDB with class loader sun.misc.Launcher$AppClassLoader@1540e19d 
 Loaded from file:/C:/Users/Ivan/Desktop/UNI2021Sem2(ESTE)/Software%20Construction/BlackJack/lib/derby.jar
 java.vendor=Oracle Corporation
-java.runtime.version=15.0.2+7-27
+java.runtime.version=1.8.0_301-b09
 user.dir=C:\Users\Ivan\Desktop\UNI2021Sem2(ESTE)\Software Construction\BlackJack
 os.name=Windows 10
 os.arch=amd64

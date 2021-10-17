@@ -93,11 +93,6 @@ public class Player implements User {
         this.finishedFlag = finishedFlag;
     }
 
-    @Override
-    public int calcHandValue() {
-        return this.getPlayerHand().getHandValue();
-    }
-
     public boolean isHasWon() {
         return hasWon;
     }
@@ -112,6 +107,11 @@ public class Player implements User {
 
     public void setLoginFlag(boolean loginFlag) {
         this.loginFlag = loginFlag;
+    }
+
+    @Override
+    public int calcHandValue() {
+        return this.getPlayerHand().getHandValue();
     }
 
     /**

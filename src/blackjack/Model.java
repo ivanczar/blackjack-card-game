@@ -32,11 +32,12 @@ public class Model extends Observable {
     }
 
     /**
-     * calls database checkname, which returns a player object which is then 
+     * calls database checkname, which returns a player object which is then
      * assigned to this data player. Also calls populate info and leader table
      * in database and assigns return values to respective data fields.
+     *
      * @param playerName
-     * @param password 
+     * @param password
      */
     public void checkName(String playerName, String password) {
 
@@ -45,11 +46,9 @@ public class Model extends Observable {
 
         data.rules = db.getRules();
 //        data.leaderBoard = db.getLeaderBoard();
-data.leaderBoard = db.populateLeaderTable();
+        data.leaderBoard = db.populateLeaderTable();
         data.credits = db.getCredits();
-        
-        
-        
+
         this.setChanged();
         this.notifyObservers(this.data);
 
@@ -57,9 +56,10 @@ data.leaderBoard = db.populateLeaderTable();
 
     /**
      * sets bet value of bet object instance by calling the bet placeBet method,
+     *
      * @param player
-     * @param betAmount 
-     */ 
+     * @param betAmount
+     */
     public void placeBet(Player player, Double betAmount) {
 
         System.out.println("Bet placed");
@@ -70,7 +70,7 @@ data.leaderBoard = db.populateLeaderTable();
 //        }
 
     }
-    
+
     /**
      * Deals initial 2 cards for each player and checks for BlackJack condition
      */
@@ -96,12 +96,13 @@ data.leaderBoard = db.populateLeaderTable();
     }
 
     /**
-     * Calls player hit method and calls checkWin and sets isBust=true if player busts
+     * Calls player hit method and calls checkWin and sets isBust=true if player
+     * busts
      */
     public void playerHit() {
         Card c = null;
         if (data.player.calcHandValue() < 21) {
-           
+
             data.player.hit(myDeck.deal());
 
         }
@@ -121,7 +122,8 @@ data.leaderBoard = db.populateLeaderTable();
     }
 
     /**
-     * sets player instance variables to stand status. Calls dealerPlay if player has not yet bust
+     * sets player instance variables to stand status. Calls dealerPlay if
+     * player has not yet bust
      */
     public void playerStand() {
         data.player.setPlayerFinished(true);
@@ -149,24 +151,24 @@ data.leaderBoard = db.populateLeaderTable();
                 data.dealer.hit(myDeck.deal());
                 this.setChanged();
                 this.notifyObservers(this.data);
-                System.out.println(data.dealer);
+                
 
             }
             if (data.dealer.calcHandValue() > 21) {  //checks dealer bust          
                 data.dealer.setDealerFinished(true);
-
+                this.setChanged();
+                this.notifyObservers(this.data);
             }
         }
         data.dealer.setDealerFinished(true);
 
-        this.setChanged();
-        this.notifyObservers(this.data);
         checkWin();
 
     }
 
     /**
-     *  Sets data winner instance variable to return value of CheckWinner winCondition()
+     * Sets data winner instance variable to return value of CheckWinner
+     * winCondition()
      */
     public void checkWin() {
         checkWinner.winCondition(data.player, data.dealer);
@@ -205,7 +207,7 @@ data.leaderBoard = db.populateLeaderTable();
     }
 
     /**
-     *  Calls database quitGame(). sets data quitFlag to true
+     * Calls database quitGame(). sets data quitFlag to true
      */
     public void quitGame() {
 
@@ -218,7 +220,8 @@ data.leaderBoard = db.populateLeaderTable();
     }
 
     /**
-     * Re-initializes objects and resets variables to default. Player object remains
+     * Re-initializes objects and resets variables to default. Player object
+     * remains
      */
     public void resetGame() {
 
@@ -244,7 +247,8 @@ data.leaderBoard = db.populateLeaderTable();
     }
 
     /**
-     * Calls databse quitGame() re-initalizes objects and resets variables to defAult, including player object
+     * Calls databse quitGame() re-initalizes objects and resets variables to
+     * defAult, including player object
      */
     public void logout() {
         db.quitGame(data.player.getPlayerName(), data.player.getPlayerBalance(), data.player.getPlayerWins(), data.player.getPlayerLoss());

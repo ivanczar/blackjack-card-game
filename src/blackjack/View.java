@@ -220,7 +220,7 @@ public class View extends JFrame implements Observer {
 //            dealerCards.valueLabel.setForeground(Color.WHITE);
 //            }
         } else { // after initial deal
-            if (player.getPlayerFinished() == true && player.isBust == false && player.getPlayerFinished() == true) { // dealers card drawn only after player finishes playing
+            if (player.getPlayerFinished() == true && player.isBust == false) { // dealers card drawn only after player finishes playing
 
                 dealerCards.remove(backCard);
                 String secondCardURL = dealer.getDealerHand().getHand().get(1).getURL();
@@ -371,7 +371,7 @@ public class View extends JFrame implements Observer {
             this.hitstand.stand.setEnabled(false);
 
         }
-        if ((data.player.getPlayerHand().getHand().size() > 0) && data.player.hasStand == false) { //draw if 
+        if (data.player.getPlayerHand().getHand().size() > 0 && data.player.hasStand == false) { //draw if
             drawPlayerCards(data.player);
         }
 

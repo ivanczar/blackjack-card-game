@@ -166,8 +166,8 @@ public class Database {
                 String username = rs.getString("username");
                 String wins = String.valueOf(rs.getInt("wins"));
                 if (Integer.parseInt(wins) != 0) {
-                    conn.setAutoCommit(false);
-//                    statement.executeUpdate("INSERT INTO LEADERBOARD VALUES('" + username + "', '" + wins + "')");
+                    
+//                    statement.executeUpdate("INSERT INTO LEADERBOARD VALUES('" + username + "', '" + wins + "')"); CANT FIGURE OUT THIS ERROR (AUTOCOMMIT=OFF???)
                     leaderBoard += "USER: " + username + "\t WINS: " + wins + "\n";
                 }
 

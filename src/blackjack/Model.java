@@ -46,7 +46,7 @@ public class Model extends Observable {
 
         data.rules = db.getRules();
 //        data.leaderBoard = db.getLeaderBoard();
-        data.leaderBoard = db.populateLeaderTable();
+
         data.credits = db.getCredits();
 
         this.setChanged();
@@ -151,7 +151,6 @@ public class Model extends Observable {
                 data.dealer.hit(myDeck.deal());
                 this.setChanged();
                 this.notifyObservers(this.data);
-                
 
             }
             if (data.dealer.calcHandValue() > 21) {  //checks dealer bust          
@@ -210,8 +209,9 @@ public class Model extends Observable {
      * Calls database quitGame(). sets data quitFlag to true
      */
     public void quitGame() {
-
+        
         this.db.quitGame(data.player.getPlayerName(), data.player.getPlayerBalance(), data.player.getPlayerWins(), data.player.getPlayerLoss());
+        data.leaderBoard = db.getLeaderBoard();
         this.data.quitFlag = true; // Mark quitFlag as false.
 
         this.setChanged();

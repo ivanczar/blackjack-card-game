@@ -39,7 +39,7 @@ public class Database {
             String infoTable = "GAMEINFO";
             String leaderTable = "LEADERBOARD";
 
-//            statement.executeUpdate("DROP TABLE PLAYERINFO");
+
             if (!exists(playerTable)) {
 
                 statement.executeUpdate("CREATE TABLE " + playerTable + " (username VARCHAR(12), password VARCHAR(12), balance DOUBLE, wins INT, loss INT)");
@@ -53,17 +53,19 @@ public class Database {
             }
             if (!exists(leaderTable)) {
                 System.out.println("Leader table created");
-                statement.executeUpdate("CREATE TABLE " + leaderTable + " (username VARCHAR(20), wins VARCHAR(10))");
+                statement.executeUpdate("CREATE TABLE " + leaderTable + " (username VARCHAR(50), wins VARCHAR(50))");
                 System.out.println("LEADERBOARD created!");
 
             }
-            populateInfoTable();
-            populateLeaderTable();
+            
+//            populateInfoTable();
             statement.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
+        populateInfoTable();
+        
     }
 
     /**
@@ -115,7 +117,8 @@ public class Database {
             if (rs.next()) {
                 rules = rs.getString("rules");
             }
-
+            rs.close();
+            statement.close();
         } catch (SQLException e) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -138,7 +141,8 @@ public class Database {
             if (rs.next()) {
                 credits = rs.getString("credits");
             }
-
+            rs.close();
+            statement.close();
         } catch (SQLException e) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -152,37 +156,76 @@ public class Database {
      *
      * @return
      */
-    public String populateLeaderTable() {
-        System.out.println("populating leader table");
+    public ResultSet getPlayerWins() {
+        System.out.println("getting player wins to then populate leaderBoard");
 
-        String leaderBoard = "";
+        ResultSet rs = null;
+
         try {
-            conn = DriverManager.getConnection(url, dbusername, dbpassword);
+//            conn = DriverManager.getConnection(url, dbusername, dbpassword);
             Statement statement = conn.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT username, wins, loss FROM PLAYERINFO ORDER BY wins DESC");
+            rs = statement.executeQuery("SELECT username, wins, loss FROM PLAYERINFO ORDER BY wins DESC");
+
+//            rs.close();
+//            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return rs;
+    }
+
+    public void populateLeaderBoard(ResultSet inputRS) {
+
+        ResultSet rs = inputRS;
+
+        try {
+            
+            PreparedStatement pstmt = conn.prepareStatement("INSERT INTO LEADERBOARD (username , wins) VALUES (?,?)");
 
             while (rs.next()) {
 
                 String username = rs.getString("username");
                 String wins = String.valueOf(rs.getInt("wins"));
+
                 if (Integer.parseInt(wins) != 0) {
-                    
-//                    statement.executeUpdate("INSERT INTO LEADERBOARD VALUES('" + username + "', '" + wins + "')"); CANT FIGURE OUT THIS ERROR (AUTOCOMMIT=OFF???)
-                    leaderBoard += "USER: " + username + "\t WINS: " + wins + "\n";
+
+                    pstmt.setString(1, username);
+                    pstmt.setString(2, wins);
+                    pstmt.executeUpdate();
+//                    leaderBoard += "USER: " + username + "\t WINS: " + wins + "\n";
                 }
 
+//                rs.close();
+//                pstmt.close();
             }
-
-            System.out.println(leaderBoard);
-
-            statement.close();
         } catch (SQLException ex) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return leaderBoard;
     }
 
+    public String getLeaderBoard() {
+
+        String leaderBoard = "";
+
+        try {
+            
+            Statement statement = conn.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT DISTINCT username, wins FROM LEADERBOARD");
+
+            while (rs.next()) {
+                String username = rs.getString("username");
+                String wins = rs.getString("wins");
+                leaderBoard += "USER: " + username + "\t WINS: " + wins + "\n";
+            }
+//                rs.close();
+//                statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return leaderBoard;
+    }
 
     /**
      * Checks in PLAYERINFO databaSe if username exists, if not creates a new
@@ -197,7 +240,7 @@ public class Database {
         System.out.println("Checking name in db");
         Player player = new Player();
         try {
-            conn = DriverManager.getConnection(url, dbusername, dbpassword);
+//            conn = DriverManager.getConnection(url, dbusername, dbpassword);
             Statement statement = conn.createStatement();
             ResultSet rs = statement.executeQuery("SELECT password, balance, wins, loss FROM PLAYERINFO WHERE username = '" + username + "'");
 
@@ -269,15 +312,16 @@ public class Database {
      */
     public void quitGame(String username, double balance, int wins, int loss) {
         Statement statement;
+        
         try {
             statement = conn.createStatement();
             statement.executeUpdate("UPDATE PLAYERINFO SET balance=" + balance + ", wins=" + wins + ", loss=" + loss + " WHERE username='" + username + "'");
 
-            statement.close();
+//            statement.close();
 //            conn.close();
         } catch (SQLException ex) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        populateLeaderBoard(getPlayerWins());
     }
 }

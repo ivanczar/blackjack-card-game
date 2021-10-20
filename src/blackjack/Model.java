@@ -11,8 +11,6 @@ public class Model extends Observable {
     final int DECKCAPACITY = 52;
 
     Deck myDeck; // instantiates a deck object  
-//    Player player;
-//    Dealer dealer;
     Data data = new Data();
     Bet bet;
     CheckBJ checkBJ;
@@ -41,7 +39,7 @@ public class Model extends Observable {
      */
     public void checkName(String playerName, String password) {
 
-        System.out.println("MODEL CHECKNAME CALLED");
+//        System.out.println("MODEL CHECKNAME CALLED");
         this.data.player = db.checkName(playerName, password);
 
         data.rules = db.getRules();
@@ -62,7 +60,7 @@ public class Model extends Observable {
      */
     public void placeBet(Player player, Double betAmount) {
 
-        System.out.println("Bet placed");
+//        System.out.println("Bet placed");
         this.bet.placeBet(player, betAmount);
 
         this.setChanged();
@@ -75,7 +73,7 @@ public class Model extends Observable {
      * Deals initial 2 cards for each player and checks for BlackJack condition
      */
     public void initialDeal() {
-        System.out.println("Dealing initial caRds...");
+//        System.out.println("Dealing initial caRds...");
 
         if (!(data.player.getPlayerFinished() || data.dealer.getDealerFinished())) {
 

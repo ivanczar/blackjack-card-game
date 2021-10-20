@@ -30,7 +30,7 @@ public class CheckBJ {
             dealer.setHasWon(true);
             player.setHasWon(true);
             player.setPlayerFinished(true);
-            dealer.setDealerFinished(true);
+//            dealer.setDealerFinished(true);
 
         } else if (this.isBlackJack(player)) { // if player has blackjack
 
@@ -39,7 +39,7 @@ public class CheckBJ {
             System.out.println("*" + player.getPlayerName().toUpperCase() + " BLACKJACK!*");
             player.setHasWon(true);
             player.setPlayerFinished(true);
-            dealer.setDealerFinished(true);
+//            dealer.setDealerFinished(true);
 
         } else if (this.isBlackJack(dealer)) {
 

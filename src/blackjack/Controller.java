@@ -34,16 +34,16 @@ public class Controller implements ActionListener {
 
         switch (command) {
             case "Log in":
-                System.out.println("Login Pressed");
+//                System.out.println("Login Pressed");
                 String username = this.view.loginPanel.unInput.getText();
                 String password = this.view.loginPanel.pwInput.getText();
 
                 this.model.checkName(username, password);
-                System.out.println("CHECKNAME CALLED IN CONTROLLEr");
+//                System.out.println("CHECKNAME CALLED IN CONTROLLEr");
 
                 break;
             case "Place bet":
-                System.out.println("pressed place bet");
+//                System.out.println("pressed place bet");
                 double bet = 0;
                 try { // checks that input is numerical
                     bet = Double.parseDouble(this.view.betPanel.betField.getText());
@@ -59,7 +59,7 @@ public class Controller implements ActionListener {
                 } else {
                     view.invalidBet();
                 }
-                System.out.println(this.model.bet.getBetAmount());
+//                System.out.println(this.model.bet.getBetAmount());
 
                 break;
             case "HIT":
@@ -75,12 +75,12 @@ public class Controller implements ActionListener {
                 this.model.quitGame();
                 break;
             case "Reset":
-                System.out.println("Reset pressed");
+//                System.out.println("Reset pressed");
                 this.model.resetGame();
 
                 break;
             case "Help":
-                System.out.println("help clicked");
+//                System.out.println("help clicked");
                 String rules = model.data.rules;
                 this.view.help(rules);
                 break;

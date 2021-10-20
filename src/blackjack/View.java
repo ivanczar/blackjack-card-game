@@ -220,7 +220,7 @@ public class View extends JFrame implements Observer {
 //            dealerCards.valueLabel.setForeground(Color.WHITE);
 //            }
         } else { // after initial deal
-            if (player.getPlayerFinished() == true && player.isBust == false || player.getPlayerHand().getHandValue()> dealer.getDealerHand().getHandValue() ); { // dealers card drawn only after player finishes playing
+            if (player.getPlayerFinished() == true || player.isBust == false  ); { // dealers card drawn only after player finishes playing
 
                 dealerCards.remove(backCard);
                 String secondCardURL = dealer.getDealerHand().getHand().get(1).getURL();
@@ -255,7 +255,7 @@ public class View extends JFrame implements Observer {
      * @param rules
      */
     public void help(String rules) {
-        System.out.println(rules);
+//        System.out.println(rules);
         JOptionPane.showMessageDialog(this, rules, "RULES", JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -266,7 +266,7 @@ public class View extends JFrame implements Observer {
      */
     private void quitGame(Data data) {
 
-        System.out.println(data.leaderBoard);
+//        System.out.println(data.leaderBoard);
         
 
         quitPanel.scoreLabel.setText("Your balance: " + data.player.getPlayerBalance());
@@ -294,7 +294,7 @@ public class View extends JFrame implements Observer {
      * @param data
      */
     public void displayWinner(Data data) {
-        System.out.println("DISPLAYING WINNER....");
+//        System.out.println("DISPLAYING WINNER....");
         ImageIcon icon;
 
         switch (data.winner) {
@@ -392,7 +392,7 @@ public class View extends JFrame implements Observer {
         }
         if (data.winner != 0 && this.hasWinner == false) {
             displayWinner(data);
-            System.out.println("HEREE");
+//            System.out.println("HEREE");
         }
     }
 

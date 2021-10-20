@@ -39,22 +39,22 @@ public class Database {
             String infoTable = "GAMEINFO";
             String leaderTable = "LEADERBOARD";
 
-
+            
             if (!exists(playerTable)) {
 
                 statement.executeUpdate("CREATE TABLE " + playerTable + " (username VARCHAR(12), password VARCHAR(12), balance DOUBLE, wins INT, loss INT)");
-                System.out.println("PLAYERINFO created!");
+//                System.out.println("PLAYERINFO created!");
             }
             if (!exists(infoTable)) {
 
                 statement.executeUpdate("CREATE TABLE " + infoTable + " (rules VARCHAR(1000), credits VARCHAR(50))");
-                System.out.println("GAMEINFO created!");
+//                System.out.println("GAMEINFO created!");
 
             }
             if (!exists(leaderTable)) {
-                System.out.println("Leader table created");
+//                System.out.println("Leader table created");
                 statement.executeUpdate("CREATE TABLE " + leaderTable + " (username VARCHAR(50), wins VARCHAR(50))");
-                System.out.println("LEADERBOARD created!");
+//                System.out.println("LEADERBOARD created!");
 
             }
             
@@ -78,7 +78,7 @@ public class Database {
         try {
 //            this.conn = DriverManager.getConnection(url, dbusername, dbpassword);
             PreparedStatement pstmt = conn.prepareStatement("INSERT INTO GAMEINFO (rules, credits) VALUES (?,?)");
-            System.out.println("POPULATING CREDITS");
+//            System.out.println("POPULATING CREDITS");
             rules = "Rules: The goal of blackjack is to beat the dealer's hand without going over 21.\n"
                     + "Face cards are worth 10. Aces are worth 1 or 11, whichever makes a better hand.\n"
                     + "Each player starts with two cards, one of the dealer's cards is hidden until the end.\n"
@@ -157,7 +157,7 @@ public class Database {
      * @return
      */
     public ResultSet getPlayerWins() {
-        System.out.println("getting player wins to then populate leaderBoard");
+//        System.out.println("getting player wins to then populate leaderBoard");
 
         ResultSet rs = null;
 
@@ -212,7 +212,7 @@ public class Database {
         try {
             
             Statement statement = conn.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT DISTINCT username, wins FROM LEADERBOARD");
+            ResultSet rs = statement.executeQuery("SELECT DISTINCT username, wins FROM LEADERBOARD ORDER BY wins DESC");
 
             while (rs.next()) {
                 String username = rs.getString("username");
@@ -237,7 +237,7 @@ public class Database {
      */
     public Player checkName(String username, String password) {
 
-        System.out.println("Checking name in db");
+//        System.out.println("Checking name in db");
         Player player = new Player();
         try {
 //            conn = DriverManager.getConnection(url, dbusername, dbpassword);
